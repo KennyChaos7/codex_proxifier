@@ -253,7 +253,12 @@ namespace ProxiFyreUI.Forms
             }
         }
 
-        private IEnumerable<string> Secrets() { return new[] { usernameTextBox.Text, passwordTextBox.Text }; }
+        private IEnumerable<string> Secrets()
+        {
+            var saved = _workspace.Configuration?.Proxies ?? new List<ProxyRule>();
+            return new[] { usernameTextBox.Text, passwordTextBox.Text }.Concat(
+                saved.Where(rule => rule != null).SelectMany(rule => new[] { rule.Username, rule.Password }));
+        }
         private void ShowError(string summary, Exception ex)
         {
             MessageBox.Show(this, _errorFormatter.FormatException(summary, ex, Secrets()), "Codex Proxy",
@@ -349,4 +354,5 @@ namespace ProxiFyreUI.Forms
         }
     }
 }
+
 

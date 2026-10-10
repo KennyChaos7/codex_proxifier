@@ -6,3 +6,10 @@
 - 未安装、停止状态及 UAC 运行链路由步骤 15 记录，不以构建成功代替网络运行验收。
 
 当前等待远端真实构建结果，主计划本步骤暂不勾选。
+## 最终构建修复 1
+
+- Run 38034932570：Debug 编译失败 CS0012，MainForm 清除 Configuration.ExtensionData 时需要 JToken 的程序集引用。
+- 根因：.NET Framework 非 SDK 工程没有将共享模型的 Newtonsoft.Json 编译引用传递给 UI。
+- 修复：UI 显式引用已经由配置项目还原的同版本 Newtonsoft.Json，不增加新的包或运行依赖。
+- 同批修正候选窗口排序后按 Row.Tag 返回真实路径，增加排序回归；凭据遮盖同时覆盖正在编辑和已保存值。
+- 修复后触发相同 Windows 构建/测试链路；没有将失败结果标记通过。

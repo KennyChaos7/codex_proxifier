@@ -83,6 +83,7 @@
     <Compile Include="CodexRoutingPolicyTests.cs" />
     <Compile Include="CodexTargetDiscoveryTests.cs" />
     <Compile Include="CodexPathDisplayTests.cs" />
+    <Compile Include="CodexPathPickerTests.cs" />
     <Compile Include="DiagnosticsBuilderTests.cs" />
     <Compile Include="EngineLocatorTests.cs" />
     <Compile Include="EngineCommandLinePolicyTests.cs" />
@@ -139,6 +140,7 @@
     </ItemGroup>
   </Target>
 </Project>
+
 
 
 

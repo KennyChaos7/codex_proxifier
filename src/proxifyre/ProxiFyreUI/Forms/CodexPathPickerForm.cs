@@ -24,8 +24,10 @@ namespace ProxiFyreUI.Forms
             _candidates = candidates;
             candidatesGrid.Rows.Clear();
             foreach (var candidate in candidates)
-                candidatesGrid.Rows.Add(CodexTargetDiscovery.FormatDisplayPath(candidate.ExecutablePath),
-                    candidate.SourceLabel);
+            {
+                var row = candidatesGrid.Rows.Add(CodexTargetDiscovery.FormatDisplayPath(candidate.ExecutablePath), candidate.SourceLabel);
+                candidatesGrid.Rows[row].Tag = candidate;
+            }
             candidatesMessage.Text = candidates.Count == 0
                 ? "未找到 Codex CLI，请选择 codex.exe。"
                 : "找到以下可用路径，请选择一个。";
@@ -36,7 +38,7 @@ namespace ProxiFyreUI.Forms
         private void UsePath(object sender, EventArgs args)
         {
             if (candidatesGrid.CurrentRow == null) return;
-            SelectedPath = _candidates[candidatesGrid.CurrentRow.Index].ExecutablePath;
+            SelectedPath = ((CodexPathCandidate)candidatesGrid.CurrentRow.Tag).ExecutablePath;
             DialogResult = DialogResult.OK;
         }
 
@@ -69,4 +71,5 @@ namespace ProxiFyreUI.Forms
         }
     }
 }
+
 
