@@ -126,7 +126,25 @@ namespace ProxiFyre.Tests
         {
             // Render the actual controls without connecting to a host service or opening
             // engine resolution errors. Runtime acceptance remains a separate real test.
-            protected override void OnShown(EventArgs e) { }
+            protected override void OnShown(EventArgs e)
+            {
+                var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+                var local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                var cli = System.IO.Path.Combine(local, @"OpenAI\Codex\bin\codex.exe");
+                var targets = (List<string>)typeof(MainForm).GetField("_targets", flags).GetValue(this);
+                targets.Add(@"C:\Program Files\WindowsApps\OpenAI.Codex_");
+                targets.Add(cli);
+                typeof(MainForm).GetField("_selectedCliPath", flags).SetValue(this, cli);
+                var workspace = (ProxiFyreUI.Infrastructure.ConfigurationWorkspace)typeof(MainForm).GetField("_workspace", flags).GetValue(this);
+                typeof(ProxiFyreUI.Infrastructure.ConfigurationWorkspace).GetProperty("Configuration").SetValue(workspace,
+                    ProxiFyre.Configuration.CodexRoutingPolicy.CreateConfiguration(targets,
+                        new ProxiFyre.Configuration.ProxyRule { Socks5ProxyEndpoint = "127.0.0.1:7890", Socks5Transport = "TCP" }, true, "Info"));
+                typeof(MainForm).GetField("_serviceStatus", flags).SetValue(this,
+                    new ProxiFyreUI.Infrastructure.ServiceStatusInfo(ProxiFyreUI.Infrastructure.ProxiFyreServiceState.Stopped));
+                typeof(MainForm).GetMethod("BindTargets", flags).Invoke(this, null);
+                typeof(MainForm).GetMethod("UpdateState", flags).Invoke(this, null);
+                FindControl<TextBox>(this, "endpointTextBox").Select(0, 0);
+            }
         }
 
         private static ScaledLayout ScaleToTwoHundredPercent(Form form)

@@ -39,7 +39,7 @@ namespace ProxiFyreUI.Forms
 
         private void SizeCandidateRows()
         {
-            foreach (DataGridViewRow row in candidatesGrid.Rows) row.Height = candidatesGrid.Font.Height * 5 + 16;
+            foreach (DataGridViewRow row in candidatesGrid.Rows) row.Height = candidatesGrid.Font.Height * 4 + 22;
         }
 
         private void PaintCandidate(object sender, DataGridViewRowPrePaintEventArgs e)
@@ -84,8 +84,6 @@ namespace ProxiFyreUI.Forms
                 card.Right - x - (int)(14 * scale), card.Bottom - badge.Bottom - (int)(8 * scale));
             TextRenderer.DrawText(e.Graphics, row.Cells[0].Value.ToString(), Font, text, Color.FromArgb(62, 87, 138),
                 TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis);
-            if (candidatesGrid.Focused && selected)
-                ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(card, -3, -3), CodexVisual.Blue, Color.White);
         }
         private void UsePath(object sender, EventArgs args)
         {

@@ -170,6 +170,19 @@ namespace ProxiFyreUI.Forms
         }
     }
 
+    internal sealed class BadgeLabel : Label
+    {
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            CodexVisual.Surface(e.Graphics, ClientRectangle, Height / 2F, BackColor, BackColor);
+            TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, ForeColor,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine);
+        }
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            using (var brush = new SolidBrush(Color.White)) e.Graphics.FillRectangle(brush, ClientRectangle);
+        }
+    }
     internal sealed class StatusPill : Label
     {
         internal StatusPill() { AutoSize = true; Padding = new Padding(30, 8, 14, 8); }
@@ -183,4 +196,3 @@ namespace ProxiFyreUI.Forms
         }
     }
 }
-

@@ -14,11 +14,11 @@ namespace ProxiFyreUI.Forms
         {
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            Font = WinFormsFontBootstrap.CreateUiFont("Segoe UI", 10.5F);
+            Font = WinFormsFontBootstrap.CreateUiFont("Segoe UI", 12F);
             ForeColor = CodexVisual.Ink;
             Text = "选择 Codex CLI 路径";
-            ClientSize = new Size(640, 414);
-            MinimumSize = new Size(640, 414);
+            ClientSize = new Size(660, 450);
+            MinimumSize = new Size(660, 450);
             StartPosition = FormStartPosition.CenterParent;
             ShowInTaskbar = false; MinimizeBox = false; MaximizeBox = false;
             BackColor = Color.White;

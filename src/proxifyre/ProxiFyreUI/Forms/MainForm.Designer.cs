@@ -34,12 +34,12 @@ namespace ProxiFyreUI.Forms
             Text = "Codex Proxy";
             BackColor = CodexVisual.Background;
             StartPosition = FormStartPosition.CenterScreen;
-            rootPanel = Layout(1, 5);
+            rootPanel = GridLayout(1, 5);
             rootPanel.Padding = new Padding(24, 22, 24, 12);
             rootPanel.RowStyles[3].SizeType = SizeType.Percent; rootPanel.RowStyles[3].Height = 100;
             Controls.Add(rootPanel);
 
-            var header = Layout(2, 2);
+            var header = GridLayout(2, 2);
             header.Margin = new Padding(6, 0, 6, 20);
             header.ColumnStyles[0].SizeType = SizeType.Percent; header.ColumnStyles[0].Width = 100;
             titleLabel = Label("titleLabel", "Codex 专用代理");
@@ -52,17 +52,17 @@ namespace ProxiFyreUI.Forms
             header.Controls.Add(serviceStateValueLabel, 1, 0); header.SetRowSpan(serviceStateValueLabel, 2);
             rootPanel.Controls.Add(header, 0, 0);
 
-            var cards = Layout(2, 1);
+            var cards = GridLayout(2, 1);
             cards.MinimumSize = new Size(0, 280);
             cards.ColumnStyles.Clear();
             cards.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 49));
             cards.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 51));
             settingsPanel = Card(1, 7);
             settingsPanel.Name = "settingsPanel"; settingsPanel.Margin = new Padding(0, 0, 8, 0);
-            var proxyHeading = Layout(2, 1);
+            var proxyHeading = GridLayout(2, 1);
             proxyHeading.ColumnStyles[0].SizeType = SizeType.Percent; proxyHeading.ColumnStyles[0].Width = 100;
             proxyHeading.Controls.Add(Heading("proxyTitle", "代理设置"), 0, 0);
-            var badge = Label("transportBadge", "SOCKS5"); badge.ForeColor = CodexVisual.Blue;
+            var badge = new BadgeLabel { Name = "transportBadge", Text = "SOCKS5", AutoSize = true }; badge.ForeColor = CodexVisual.Blue;
             badge.BackColor = Color.FromArgb(232, 240, 255); badge.Padding = new Padding(10, 4, 10, 4); badge.Anchor = AnchorStyles.Right;
             proxyHeading.Controls.Add(badge, 1, 0);
             settingsPanel.Controls.Add(proxyHeading, 0, 0);
@@ -75,7 +75,7 @@ namespace ProxiFyreUI.Forms
             bypassLanCheckBox = Check("bypassLanCheckBox", "局域网直连", true);
             authenticationCheckBox = Check("authenticationCheckBox", "代理需要认证", false);
             settingsPanel.Controls.Add(bypassLanCheckBox, 0, 4); settingsPanel.Controls.Add(authenticationCheckBox, 0, 5);
-            authenticationFieldsPanel = Layout(2, 2);
+            authenticationFieldsPanel = GridLayout(2, 2);
             authenticationFieldsPanel.Margin = new Padding(0, 7, 0, 0);
             authenticationFieldsPanel.ColumnStyles[1].SizeType = SizeType.Percent; authenticationFieldsPanel.ColumnStyles[1].Width = 100;
             usernameTextBox = Input("usernameTextBox", ""); passwordTextBox = Input("passwordTextBox", "");
@@ -90,7 +90,7 @@ namespace ProxiFyreUI.Forms
             targetsPanel = Card(1, 3); targetsPanel.Name = "targetsPanel";
             targetsPanel.Margin = new Padding(8, 0, 0, 0);
             targetsPanel.RowStyles[1].SizeType = SizeType.Percent; targetsPanel.RowStyles[1].Height = 100;
-            var targetsHeading = Layout(2, 1);
+            var targetsHeading = GridLayout(2, 1);
             targetsHeading.ColumnStyles[0].SizeType = SizeType.Percent; targetsHeading.ColumnStyles[0].Width = 100;
             targetsHeading.Controls.Add(Heading("targetsTitle", "Codex 路径"), 0, 0);
             refreshTargetsButton = Button("refreshTargetsButton", "刷新路径", "refresh");
@@ -102,7 +102,7 @@ namespace ProxiFyreUI.Forms
             desktopCard.Controls.Add(Heading("desktopTitle", "桌面应用与后台进程"), 0, 0);
             targetsListBox = new ListBox { Name = "targetsListBox", Dock = DockStyle.Fill, HorizontalScrollbar = true,
                 IntegralHeight = false, BorderStyle = BorderStyle.None, BackColor = CodexVisual.Background,
-                ForeColor = CodexVisual.Muted, Margin = new Padding(0, 8, 0, 0), Height = 66 };
+                ForeColor = CodexVisual.Muted, Margin = new Padding(0, 8, 0, 0), Height = 38 };
             targetsListBox.Items.Add("自动识别 Codex 安装路径");
             desktopCard.Controls.Add(targetsListBox, 0, 1); targetsPanel.Controls.Add(desktopCard, 0, 1);
             var cliCard = Card(2, 2); cliCard.SurfaceColor = CodexVisual.Background;
@@ -136,7 +136,7 @@ namespace ProxiFyreUI.Forms
 
             var logs = Card(1, 2); logs.AutoSize = false; logs.Padding = new Padding(16, 10, 16, 14);
             logs.RowStyles[1].SizeType = SizeType.Percent; logs.RowStyles[1].Height = 100;
-            var logHeader = Layout(2, 1);
+            var logHeader = GridLayout(2, 1);
             logHeader.ColumnStyles[0].SizeType = SizeType.Percent; logHeader.ColumnStyles[0].Width = 100;
             logHeader.Controls.Add(Heading("logsLabel", "运行日志"), 0, 0);
             var logTools = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true,
@@ -151,14 +151,17 @@ namespace ProxiFyreUI.Forms
             logHeader.Controls.Add(logTools, 1, 0); logs.Controls.Add(logHeader, 0, 0);
             logBodyPanel = new Panel { Dock = DockStyle.Fill, Margin = new Padding(0, 10, 0, 0), BackColor = Color.White };
             logTextBox = new TextBox { Name = "logTextBox", Dock = DockStyle.Fill, Multiline = true, ReadOnly = true,
-                ScrollBars = ScrollBars.Both, WordWrap = false, BackColor = Color.White, BorderStyle = BorderStyle.None };
+                ScrollBars = ScrollBars.Both, WordWrap = false, Visible = false, BackColor = Color.White, BorderStyle = BorderStyle.None };
             logEmptyLabel = new Label { Name = "logEmptyLabel", Text = "启动代理后显示日志", Dock = DockStyle.Fill,
                 ForeColor = CodexVisual.Muted, TextAlign = ContentAlignment.MiddleCenter };
             logBodyPanel.Controls.Add(logTextBox); logBodyPanel.Controls.Add(logEmptyLabel); logEmptyLabel.BringToFront();
-            logTextBox.TextChanged += (sender, args) => logEmptyLabel.Visible = logTextBox.TextLength == 0;
+            logTextBox.TextChanged += (sender, args) => {
+                logTextBox.Visible = logTextBox.TextLength > 0;
+                logEmptyLabel.Visible = logTextBox.TextLength == 0;
+            };
             logs.Controls.Add(logBodyPanel, 0, 1); rootPanel.Controls.Add(logs, 0, 3);
 
-            var footer = Layout(2, 1); footer.Dock = DockStyle.Bottom; footer.Margin = new Padding(3, 10, 3, 0);
+            var footer = GridLayout(2, 1); footer.Dock = DockStyle.Bottom; footer.Margin = new Padding(3, 10, 3, 0);
             footer.ColumnStyles[0].SizeType = SizeType.Percent; footer.ColumnStyles[0].Width = 100;
             driverLabel = Label("driverLabel", "Windows Packet Filter"); driverLabel.ForeColor = CodexVisual.Muted;
             footer.Controls.Add(driverLabel, 0, 0);
@@ -168,9 +171,9 @@ namespace ProxiFyreUI.Forms
             ResumeLayout(true);
         }
 
-        private static TableLayoutPanel Layout(int columns, int rows)
+        private static TableLayoutPanel GridLayout(int columns, int rows)
         {
-            var panel = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, ColumnCount = columns,
+            var panel = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = columns,
                 RowCount = rows, Margin = Padding.Empty, BackColor = Color.Transparent };
             for (var i = 0; i < columns; i++) panel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             if (columns == 1) { panel.ColumnStyles[0].SizeType = SizeType.Percent; panel.ColumnStyles[0].Width = 100; }
@@ -179,7 +182,7 @@ namespace ProxiFyreUI.Forms
         }
         private static CardLayout Card(int columns, int rows)
         {
-            var panel = new CardLayout { Dock = DockStyle.Fill, AutoSize = true, ColumnCount = columns,
+            var panel = new CardLayout { Dock = DockStyle.Fill, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = columns,
                 RowCount = rows, Padding = new Padding(16), Margin = Padding.Empty };
             for (var i = 0; i < columns; i++) panel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             if (columns == 1) { panel.ColumnStyles[0].SizeType = SizeType.Percent; panel.ColumnStyles[0].Width = 100; }
@@ -206,5 +209,3 @@ namespace ProxiFyreUI.Forms
         { return new CodexButton { Name = name, Text = text, Glyph = glyph }; }
     }
 }
-
-
