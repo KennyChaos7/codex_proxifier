@@ -29,7 +29,7 @@ namespace ProxiFyreUI.Forms
         private EngineLocation _engineLocation;
         private ServiceStatusInfo _serviceStatus = new ServiceStatusInfo(ProxiFyreServiceState.Unknown);
         private string _selectedCliPath;
-        private bool _binding, _busy, _refreshing, _exiting;
+        private bool _binding, _busy, _refreshing, _exiting, _disposed;
 
         public MainForm() : this(new UiSettingsStore(), new EngineLocator(),
             new ProxiFyreServiceController(), new ConfigurationWorkspace(), new LogTailer(), new DiagnosticsBuilder()) { }
@@ -67,6 +67,7 @@ namespace ProxiFyreUI.Forms
                 _settings.MinimizeToTray = minimizeToTrayCheckBox.Checked;
                 try { _settingsStore.Save(_settings); } catch (Exception ex) { ShowError("无法保存窗口偏好。", ex); }
             };
+            InitializeTrayAndLogs();
             UpdateState();
         }
 
@@ -79,6 +80,7 @@ namespace ProxiFyreUI.Forms
                     throw new InvalidOperationException("未找到 CodexProxy.Service.exe，请重新安装 Codex Proxy。 " + _engineLocation.Error);
                 _workspace.Load(_engineLocation);
                 BindConfiguration();
+                _logTailer.Start(_workspace.LogDirectoryPath);
                 await RefreshTargetsAsync();
             });
             await RefreshStatusAsync();
@@ -115,7 +117,9 @@ namespace ProxiFyreUI.Forms
             _targets.Clear();
             _targets.AddRange(targets);
             BindTargets();
-            if (_workspace.Configuration != null) _workspace.MarkDirty();
+            var previous = _workspace.Configuration?.Proxies?.FirstOrDefault()?.AppNames;
+            if (_workspace.Configuration != null && (previous == null ||
+                !previous.SequenceEqual(_targets, StringComparer.OrdinalIgnoreCase))) _workspace.MarkDirty();
         }
 
         private void BindTargets()
@@ -132,6 +136,7 @@ namespace ProxiFyreUI.Forms
             using (var picker = new CodexPathPickerForm())
             {
                 if (picker.ShowDialog(this) != DialogResult.OK) return;
+                if (_selectedCliPath != null) _targets.RemoveAll(path => string.Equals(path, _selectedCliPath, StringComparison.OrdinalIgnoreCase));
                 _selectedCliPath = picker.SelectedPath;
                 if (!_targets.Contains(_selectedCliPath, StringComparer.OrdinalIgnoreCase)) _targets.Add(_selectedCliPath);
                 BindTargets();
@@ -225,6 +230,12 @@ namespace ProxiFyreUI.Forms
             serviceStateValueLabel.Text = _busy ? "正在处理…" : StateText(_serviceStatus.State);
             serviceStateValueLabel.ForeColor = _serviceStatus.IsRunning ? Color.FromArgb(30, 130, 82) : Color.FromArgb(70, 80, 96);
             changesStateLabel.Text = _workspace.IsDirty ? "更改尚未保存" : "";
+            if (trayStartItem != null)
+            {
+                trayStartItem.Enabled = startServiceButton.Enabled;
+                trayStopItem.Enabled = stopServiceButton.Enabled;
+                notifyIcon.Text = "Codex Proxy · " + serviceStateValueLabel.Text;
+            }
         }
 
         private static string StateText(ProxiFyreServiceState state)
@@ -249,6 +260,58 @@ namespace ProxiFyreUI.Forms
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        private void InitializeTrayAndLogs()
+        {
+            var trayMenu = new ContextMenuStrip(components);
+            trayMenu.Items.Add("显示窗口", null, (sender, args) => RestoreFromSecondaryLaunch());
+            trayStartItem = new ToolStripMenuItem("启动代理", null, async (sender, args) => await ApplyAsync());
+            trayStopItem = new ToolStripMenuItem("停止代理", null, async (sender, args) => await StopAsync());
+            trayMenu.Items.Add(trayStartItem); trayMenu.Items.Add(trayStopItem);
+            trayMenu.Items.Add(new ToolStripSeparator());
+            trayMenu.Items.Add("退出", null, (sender, args) => {
+                if (_busy) return;
+                if (_workspace.IsDirty && MessageBox.Show(this, "尚有未保存的更改，是否退出？", "Codex Proxy",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+                _exiting = true; Close();
+            });
+            notifyIcon = new NotifyIcon(components) { Icon = SystemIcons.Application,
+                Text = "Codex Proxy", Visible = true, ContextMenuStrip = trayMenu };
+            notifyIcon.DoubleClick += (sender, args) => RestoreFromSecondaryLaunch();
+            _logTailer.LinesRead += LogLinesRead;
+            copyDiagnosticsButton.Click += (sender, args) => {
+                try
+                {
+                    var report = _diagnosticsBuilder.Build(new DiagnosticsContext {
+                        EnginePath = _workspace.EnginePath, ConfigurationPath = _workspace.ConfigurationPath,
+                        LogDirectoryPath = _workspace.LogDirectoryPath, ServiceStatus = _serviceStatus,
+                        Validation = _workspace.LastValidation, RecentMessages = _logLines, Secrets = Secrets()
+                    });
+                    Clipboard.SetText(CodexTargetDiscovery.FormatDisplayPath(report));
+                    stateDetailLabel.Text = "脱敏诊断已复制";
+                }
+                catch (Exception ex) { ShowError("无法复制诊断。", ex); }
+            };
+        }
+
+        private void LogLinesRead(object sender, LogLinesEventArgs args)
+        {
+            if (_exiting || !IsHandleCreated) return;
+            try
+            {
+                BeginInvoke(new Action(() => {
+                    if (_exiting || args.Generation != _logTailer.Generation) return;
+                    if (args.Reset) _logLines.Clear();
+                    foreach (var line in args.Lines)
+                        _logLines.Enqueue(CodexTargetDiscovery.FormatDisplayPath(_diagnosticsBuilder.Redact(line, Secrets())));
+                    while (_logLines.Count > ApplicationConstants.MaximumLogLines) _logLines.Dequeue();
+                    logTextBox.Lines = _logLines.ToArray();
+                    logTextBox.SelectionStart = logTextBox.TextLength;
+                    logTextBox.ScrollToCaret();
+                }));
+            }
+            catch (InvalidOperationException) when (_exiting || IsDisposed) { }
+        }
+
         public void RestoreFromSecondaryLaunch()
         {
             if (_exiting) return;
@@ -269,9 +332,12 @@ namespace ProxiFyreUI.Forms
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && !_disposed)
             {
+                _disposed = true;
                 _exiting = true;
+                notifyIcon.Visible = false;
+                _logTailer.LinesRead -= LogLinesRead;
                 _lifetime.Cancel();
                 _workspace.DirtyStateChanged -= WorkspaceChanged;
                 _logTailer.Dispose();
@@ -283,3 +349,4 @@ namespace ProxiFyreUI.Forms
         }
     }
 }
+

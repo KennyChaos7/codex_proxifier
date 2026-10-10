@@ -15,6 +15,9 @@ namespace ProxiFyreUI.Forms
         private Label titleLabel, serviceStateValueLabel, changesStateLabel, stateDetailLabel, cliPathLabel;
         private Button startServiceButton, stopServiceButton, applyButton, selectCliButton, refreshTargetsButton;
         private Timer serviceRefreshTimer;
+        private NotifyIcon notifyIcon;
+        private ToolStripMenuItem trayStartItem, trayStopItem;
+        private Button copyDiagnosticsButton;
 
         private void InitializeComponent()
         {
@@ -90,7 +93,10 @@ namespace ProxiFyreUI.Forms
             stopServiceButton = Button("stopServiceButton", "停止代理"); applyButton = Button("applyButton", "保存并应用");
             actions.Controls.Add(startServiceButton); actions.Controls.Add(stopServiceButton); actions.Controls.Add(applyButton);
             stateDetailLabel = Label("stateDetailLabel", ""); actions.Controls.Add(stateDetailLabel); root.Controls.Add(actions, 0, 2);
-            root.Controls.Add(Label("logsLabel", "运行日志"), 0, 3);
+            var logHeader = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true };
+            logHeader.Controls.Add(Label("logsLabel", "运行日志"));
+            copyDiagnosticsButton = Button("copyDiagnosticsButton", "复制脱敏诊断");
+            logHeader.Controls.Add(copyDiagnosticsButton); root.Controls.Add(logHeader, 0, 3);
             logTextBox = new TextBox { Name = "logTextBox", Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Both, WordWrap = false, BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle };
             root.Controls.Add(logTextBox, 0, 4);
             var footer = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, Margin = new Padding(0, 10, 0, 0) };
@@ -104,4 +110,5 @@ namespace ProxiFyreUI.Forms
         private static Button Button(string name, string text) { return new Button { Name = name, Text = text, AutoSize = true, Padding = new Padding(12, 5, 12, 5), Margin = new Padding(3, 3, 8, 3) }; }
     }
 }
+
 

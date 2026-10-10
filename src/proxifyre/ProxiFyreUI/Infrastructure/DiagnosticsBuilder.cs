@@ -43,7 +43,7 @@ namespace ProxiFyreUI.Infrastructure
 
             var assembly = Assembly.GetExecutingAssembly();
             var builder = new StringBuilder();
-            builder.AppendLine("ProxiFyre diagnostics");
+            builder.AppendLine("Codex Proxy diagnostics");
             builder.AppendLine("Generated (UTC): " + DateTime.UtcNow.ToString("O"));
             builder.AppendLine("GUI version: " + GetVersion(assembly.Location));
             builder.AppendLine("Engine version: " + GetVersion(context.EnginePath));
@@ -398,3 +398,4 @@ namespace ProxiFyreUI.Infrastructure
         }
     }
 }
+
