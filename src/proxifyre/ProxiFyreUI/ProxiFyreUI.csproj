@@ -66,6 +66,7 @@
     <Compile Include="Infrastructure\LogLevelMatcher.cs" />
     <Compile Include="Infrastructure\PayloadIntegrity.cs" />
     <Compile Include="Infrastructure\ProcessCatalog.cs" />
+    <Compile Include="Infrastructure\CodexTargetDiscovery.cs" />
     <Compile Include="Infrastructure\ServiceManagement.cs" />
     <Compile Include="Infrastructure\SingleInstanceCoordinator.cs" />
     <Compile Include="Infrastructure\UiSettings.cs" />
@@ -114,3 +115,4 @@
     <ItemGroup><Compile Include="$(IntermediateOutputPath)Version.cs" /></ItemGroup>
   </Target>
 </Project>
+
