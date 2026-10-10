@@ -276,7 +276,7 @@ function Get-DeterministicGuid {
     $sha256 = [Security.Cryptography.SHA256]::Create()
     try {
         $hash = $sha256.ComputeHash([Text.Encoding]::UTF8.GetBytes(
-            "ProxiFyre.Installer|$Identity"))
+            "CodexProxy.Installer|$Identity"))
     }
     finally { $sha256.Dispose() }
     $bytes = New-Object byte[] 16
@@ -296,8 +296,8 @@ $bundleOutput = Join-Path $temporaryRoot 'bundle-output'
 $downloadedWpf = Join-Path $temporaryRoot $wpf.FileName
 $downloadedVisualCpp = Join-Path $temporaryRoot $visualCpp.FileName
 
-$msiName = "ProxiFyre-$Version-win-$normalizedArchitecture.msi"
-$bundleName = "ProxiFyre-$Version-win-$normalizedArchitecture-setup.exe"
+$msiName = "CodexProxy-$Version-win-$normalizedArchitecture.msi"
+$bundleName = "CodexProxy-$Version-win-$normalizedArchitecture-setup.exe"
 $msiPath = Join-Path $outputPath $msiName
 $bundlePath = Join-Path $outputPath $bundleName
 $builtBundlePath = Join-Path $bundleOutput $bundleName

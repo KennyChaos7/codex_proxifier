@@ -7,7 +7,7 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RestoreConfigFile>$(MSBuildThisFileDirectory)..\NuGet.Installer.Config</RestoreConfigFile>
     <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
-    <OutputName Condition="'$(OutputName)' == ''">ProxiFyre-Setup-$(ProductVersion)-win-$(InstallerPlatform)</OutputName>
+    <OutputName Condition="'$(OutputName)' == ''">CodexProxy-Setup-$(ProductVersion)-win-$(InstallerPlatform)</OutputName>
     <DefineConstants>$(DefineConstants);ProductVersion=$(ProductVersion);ProductArchitecture=$(ProductArchitecture);ProxiFyreMsiPath=$(ProxiFyreMsiPath);BootstrapperFunctionsPath=$(BootstrapperFunctionsPath);BootstrapperExtensionPath=$(BootstrapperExtensionPath);WindowsPacketFilterMsiPath=$(WindowsPacketFilterMsiPath);WindowsPacketFilterDownloadUrl=$(WindowsPacketFilterDownloadUrl);VisualCppRedistributablePath=$(VisualCppRedistributablePath);VisualCppRedistributableDownloadUrl=$(VisualCppRedistributableDownloadUrl);VisualCppRedistRegistryArchitecture=$(VisualCppRedistRegistryArchitecture)</DefineConstants>
   </PropertyGroup>
 

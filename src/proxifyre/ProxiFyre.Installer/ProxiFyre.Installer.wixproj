@@ -15,7 +15,7 @@
     <RestoreConfigFile>$(MSBuildThisFileDirectory)..\NuGet.Installer.Config</RestoreConfigFile>
     <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
     <Cultures>en-US</Cultures>
-    <OutputName Condition="'$(OutputName)' == ''">ProxiFyre-$(ProductVersion)-win-$(InstallerPlatform)</OutputName>
+    <OutputName Condition="'$(OutputName)' == ''">CodexProxy-$(ProductVersion)-win-$(InstallerPlatform)</OutputName>
     <DefineConstants>$(DefineConstants);ProductVersion=$(ProductVersion);ProductCode=$(ProductCode);ProductArchitecture=$(ProductArchitecture);ComponentGuidGenerationSeed=$(ComponentGuidGenerationSeed);DirectorySecurityComponentGuid=$(DirectorySecurityComponentGuid);UiLauncherComponentGuid=$(UiLauncherComponentGuid);StartMenuComponentGuid=$(StartMenuComponentGuid);DesktopComponentGuid=$(DesktopComponentGuid);LicenseRtfPath=$(LicenseRtfPath)</DefineConstants>
   </PropertyGroup>
 

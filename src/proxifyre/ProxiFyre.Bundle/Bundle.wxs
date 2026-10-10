@@ -10,14 +10,14 @@
      xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util"
      RequiredVersion="6.0.0">
   <Bundle
-      Name="ProxiFyre"
-      Manufacturer="NT KERNEL"
+      Name="Codex Proxy"
+      Manufacturer="KennyChaos7"
       Version="$(ProductVersion)"
-      UpgradeCode="{7E9A39B2-7668-4FE8-AA08-DBD80733E986}"
+      UpgradeCode="{1FE96B81-50B4-4D3C-8DEF-84CFC226AF15}"
       IconSourceFile="..\assets\ProxiFyre.ico"
-      AboutUrl="https://github.com/wiresock/proxifyre"
-      HelpUrl="https://github.com/wiresock/proxifyre/issues"
-      UpdateUrl="https://github.com/wiresock/proxifyre/releases"
+      AboutUrl="https://github.com/KennyChaos7/codex_proxifier"
+      HelpUrl="https://github.com/KennyChaos7/codex_proxifier/issues"
+      UpdateUrl="https://github.com/KennyChaos7/codex_proxifier/releases"
       Compressed="yes">
 
     <!--
@@ -35,7 +35,7 @@
       <bal:WixStandardBootstrapperApplication
           Theme="hyperlinkLicense"
           ThemeFile="HyperlinkLicenseTheme.xml"
-          LicenseUrl="https://github.com/wiresock/proxifyre/blob/main/LICENSE"
+          LicenseUrl="https://github.com/KennyChaos7/codex_proxifier/blob/custorm/src/proxifyre/LICENSE"
           LogoFile="..\assets\ProxiFyre.ico"
           SuppressOptionsUI="yes" />
       <!--
