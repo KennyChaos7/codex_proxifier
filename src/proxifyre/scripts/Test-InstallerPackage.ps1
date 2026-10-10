@@ -66,7 +66,7 @@ try {
         throw "MSI architecture '$actualArchitecture' does not match requested architecture '$Architecture'."
     }
     if ([string](Get-Scalar "SELECT ``Value`` FROM ``Property`` WHERE ``Property``='UpgradeCode'") -cne
-        '{309431B2-9478-43FE-8CB6-EB289306C64C}') {
+        '{B1D29949-BA0D-425B-B098-AA2D62E18326}') {
         throw 'MSI UpgradeCode changed unexpectedly.'
     }
 
@@ -105,20 +105,20 @@ try {
         throw 'The MSI must embed the complete repository AGPL-3.0 license text.'
     }
 
-    $serviceRow = @(Get-Rows "SELECT ``ServiceType``, ``StartType``, ``ErrorControl``, ``Dependencies``, ``StartName`` FROM ``ServiceInstall`` WHERE ``Name``='ProxiFyreService'")
+    $serviceRow = @(Get-Rows "SELECT ``ServiceType``, ``StartType``, ``ErrorControl``, ``Dependencies``, ``StartName`` FROM ``ServiceInstall`` WHERE ``Name``='CodexProxyService'")
     if ($serviceRow.Count -ne 1 -or [int]$serviceRow[0][0] -ne 16 -or
         [int]$serviceRow[0][1] -ne 3 -or [int]$serviceRow[0][2] -ne 32769 -or
         [string]$serviceRow[0][3] -notmatch 'NDISRD' -or
         [string]$serviceRow[0][4] -cne 'LocalSystem') {
-        throw 'ProxiFyreService must be a vital, demand-start LocalSystem own-process service that depends on NDISRD.'
+        throw 'CodexProxyService must be a vital, demand-start LocalSystem own-process service that depends on NDISRD.'
     }
-    $serviceEvents = [int](Get-Scalar "SELECT ``Event`` FROM ``ServiceControl`` WHERE ``Name``='ProxiFyreService'")
+    $serviceEvents = [int](Get-Scalar "SELECT ``Event`` FROM ``ServiceControl`` WHERE ``Name``='CodexProxyService'")
     if ($serviceEvents -ne 162) {
-        throw 'ProxiFyreService must stop for install/uninstall and be removed only during uninstall.'
+        throw 'CodexProxyService must stop for install/uninstall and be removed only during uninstall.'
     }
 
     $shortcuts = @(Get-Rows 'SELECT `Name`, `Target` FROM `Shortcut`')
-    if ($shortcuts.Count -ne 2 -or @($shortcuts | Where-Object { $_[1] -notmatch 'ProxiFyreUI\.exe' }).Count -ne 0) {
+    if ($shortcuts.Count -ne 2 -or @($shortcuts | Where-Object { $_[1] -notmatch 'CodexProxy\.exe' }).Count -ne 0) {
         throw 'Both installer shortcuts must launch CodexProxy.exe.'
     }
 
@@ -306,3 +306,4 @@ finally {
 }
 
 Write-Output "Validated ProxiFyre $Version $Architecture MSI authoring and unsigned state."
+

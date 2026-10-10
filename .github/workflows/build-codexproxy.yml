@@ -2,7 +2,7 @@ name: Build Codex Proxy
 on:
   push:
     branches: [custorm]
-    paths: [.github/workflows/build-codexproxy.yml]
+    paths: ['.github/workflows/build-codexproxy.yml', 'src/proxifyre/**', 'scripts/Build-CodexProxy.ps1', 'scripts/Test-CodexProxy.ps1']
   workflow_dispatch:
 permissions:
   contents: read
@@ -34,13 +34,33 @@ jobs:
             choco install nuget.commandline -y --no-progress
             if ($LASTEXITCODE -ne 0) { throw 'NuGet installation failed' }
           }
-      - name: Compile Debug baseline
+      - name: Compile Debug application
         shell: pwsh
         run: ./scripts/Build-CodexProxy.ps1 -Configuration Debug
+      - name: Build Release application and installers
+        shell: pwsh
+        run: ./scripts/Build-CodexProxy.ps1 -Configuration Release -BuildInstaller
+      - name: Run final application tests
+        shell: pwsh
+        run: ./scripts/Test-CodexProxy.ps1 -Configuration Release
+      - name: Upload installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodexProxy-0.1.0-x64
+          path: src/proxifyre/bin/installer/x64/Release/
+          if-no-files-found: error
       - name: Upload application payload
         uses: actions/upload-artifact@v4
         with:
-          name: CodexProxy-Debug-x64
-          path: src/proxifyre/bin/exe/x64/Debug/
+          name: CodexProxy-Release-x64
+          path: src/proxifyre/bin/exe/x64/Release/
           if-no-files-found: error
-
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodexProxy-TestResults
+          path: |
+            artifacts/test-results/
+            CodexProxy-GUI.png
+          if-no-files-found: warn

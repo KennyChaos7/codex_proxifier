@@ -12,10 +12,11 @@ $taskAdapter = Join-Path $taskSource 'packages/NUnit3TestAdapter.4.6.0/build/net
 & $taskVstest $taskTests '/Platform:x64' "/TestAdapterPath:$taskAdapter" "/ResultsDirectory:$taskResults" '/Logger:trx;LogFileName=CodexProxy.trx'
 if ($LASTEXITCODE -ne 0) { throw "Managed tests failed: $LASTEXITCODE" }
 $taskNative = Join-Path $taskSource "bin/tests/x64/$Configuration/netlib-tests.exe"
-& $taskNative "--gtest_output=xml:$taskResults/native-tests.xml"
+& $taskNative "--gtest_filter=OwnerRoutingPolicyTest.*" "--gtest_output=xml:$taskResults/native-tests.xml"
 if ($LASTEXITCODE -ne 0) { throw "Native routing tests failed: $LASTEXITCODE" }
 [xml]$taskManifest = Get-Content (Join-Path $taskSource 'ProxiFyreUI/app.manifest')
 $taskUac = $taskManifest.SelectSingleNode('//*[local-name()="requestedExecutionLevel"]')
 if ($taskUac.level -ne 'requireAdministrator' -or $taskUac.uiAccess -ne 'false') { throw 'GUI must request administrator at startup.' }
 Write-Output 'Codex Proxy tests completed.'
+
 

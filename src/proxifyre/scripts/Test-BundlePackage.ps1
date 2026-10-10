@@ -291,7 +291,7 @@ try {
     if ($actualWin64 -ne $expectedWin64) {
         throw "Bundle engine architecture does not match $Architecture."
     }
-    if ($bundleProperties.GetAttribute('DisplayName') -cne 'ProxiFyre') {
+    if ($bundleProperties.GetAttribute('DisplayName') -cne 'Codex Proxy') {
         throw 'The bundle display name must avoid the duplicated "Setup Setup" WixStdBA title.'
     }
     if ($registration.GetAttribute('Version') -cne $Version -or
@@ -571,3 +571,4 @@ finally {
 }
 
 Write-Output "Validated ProxiFyre $Version $Architecture Burn prerequisites and package metadata."
+
