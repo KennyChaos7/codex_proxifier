@@ -135,7 +135,7 @@
 
 ### 03：配置 Windows 构建环境与依赖入口
 
-- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
+- [x] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** scripts/Build-CodexProxy.ps1 的依赖准备部分；step-03-dependencies.md。系统安装需授权，不将工具本体入库。
 
@@ -389,6 +389,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 **Expected:** 使用文档与已验证行为一致，整个独立产品可交付；有未完成关键步骤时不宣称最终完成。
 **Commit:** docs: 完成 Codex Proxy 使用文档与验收记录
+
 
 
 

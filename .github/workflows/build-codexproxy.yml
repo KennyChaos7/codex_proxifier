@@ -1,0 +1,46 @@
+name: Build Codex Proxy
+on:
+  push:
+    branches: [custorm]
+    paths: [.github/workflows/build-codexproxy.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: microsoft/setup-msbuild@v3
+        with:
+          vs-version: '[17.0,18.0)'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Prepare native dependencies
+        shell: pwsh
+        run: |
+          $taskVcpkg = Join-Path $env:RUNNER_TEMP 'vcpkg'
+          git clone --depth 1 https://github.com/microsoft/vcpkg.git $taskVcpkg
+          if ($LASTEXITCODE -ne 0) { throw 'vcpkg checkout failed' }
+          & "$taskVcpkg/bootstrap-vcpkg.bat" -disableMetrics
+          if ($LASTEXITCODE -ne 0) { throw 'vcpkg bootstrap failed' }
+          & "$taskVcpkg/vcpkg.exe" install ms-gsl:x64-windows boost-pool:x64-windows
+          if ($LASTEXITCODE -ne 0) { throw 'vcpkg dependencies failed' }
+          & "$taskVcpkg/vcpkg.exe" integrate install
+          if ($LASTEXITCODE -ne 0) { throw 'vcpkg integration failed' }
+          if (-not (Get-Command nuget.exe -ErrorAction SilentlyContinue)) {
+            choco install nuget.commandline -y --no-progress
+            if ($LASTEXITCODE -ne 0) { throw 'NuGet installation failed' }
+          }
+      - name: Compile Debug baseline
+        shell: pwsh
+        run: ./scripts/Build-CodexProxy.ps1 -Configuration Debug
+      - name: Upload application payload
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodexProxy-Debug-x64
+          path: src/proxifyre/bin/exe/x64/Debug/
+          if-no-files-found: error
+
