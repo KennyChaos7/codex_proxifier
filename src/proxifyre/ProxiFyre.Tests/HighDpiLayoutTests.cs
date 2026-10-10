@@ -31,10 +31,12 @@ namespace ProxiFyre.Tests
         [Test]
         public void RenderCodexWindowForVisualReview()
         {
-            using (var form = new MainForm())
+            Application.EnableVisualStyles();
+            using (var form = new PreviewMainForm())
             using (var bitmap = new Bitmap(form.Width, form.Height))
             {
-                form.CreateControl();
+                form.Show();
+                Application.DoEvents();
                 form.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bitmap.Size));
                 var path = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, "CodexProxy-GUI.png");
                 bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Png);
@@ -57,6 +59,13 @@ namespace ProxiFyre.Tests
                         .Where(control => control is Button));
                 }
             }
+        }
+
+        private sealed class PreviewMainForm : MainForm
+        {
+            // Render the actual controls without connecting to a host service or opening
+            // engine resolution errors. Runtime acceptance remains a separate real test.
+            protected override void OnShown(EventArgs e) { }
         }
 
         private static ScaledLayout ScaleToTwoHundredPercent(Form form)
@@ -188,5 +197,6 @@ namespace ProxiFyre.Tests
         }
     }
 }
+
 
 
