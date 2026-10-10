@@ -128,9 +128,11 @@ namespace ProxiFyreUI.Forms
         private void BindTargets()
         {
             targetsListBox.Items.Clear();
-            foreach (var target in _targets) targetsListBox.Items.Add(CodexTargetDiscovery.FormatDisplayPath(target));
-            if (_targets.Count == 0) targetsListBox.Items.Add("未发现 Codex。请安装桌面应用或选择原生 CLI。");
-            cliPathLabel.Text = string.IsNullOrEmpty(_selectedCliPath) ? "自动识别；可选择其他 codex.exe" :
+            foreach (var target in _targets.Where(path => !string.Equals(Path.GetFileName(path), "codex.exe", StringComparison.OrdinalIgnoreCase)))
+                targetsListBox.Items.Add(CodexTargetDiscovery.FormatDisplayPath(target));
+            if (targetsListBox.Items.Count == 0) targetsListBox.Items.Add("未发现桌面应用，安装后可刷新路径");
+            var firstCli = _targets.FirstOrDefault(path => string.Equals(Path.GetFileName(path), "codex.exe", StringComparison.OrdinalIgnoreCase));
+            cliPathLabel.Text = string.IsNullOrEmpty(_selectedCliPath) ? (firstCli == null ? "未选择路径" : CodexTargetDiscovery.FormatDisplayPath(firstCli)) :
                 CodexTargetDiscovery.FormatDisplayPath(_selectedCliPath);
         }
 
@@ -226,6 +228,7 @@ namespace ProxiFyreUI.Forms
         private void WorkspaceChanged(object sender, EventArgs e) { UpdateState(); }
         private void UpdateState()
         {
+            authenticationFieldsPanel.Visible = authenticationCheckBox.Checked;
             usernameTextBox.Enabled = passwordTextBox.Enabled = authenticationCheckBox.Checked && !_busy;
             settingsPanel.Enabled = targetsPanel.Enabled = !_busy;
             var ready = !_busy && _workspace.Configuration != null;
@@ -234,7 +237,8 @@ namespace ProxiFyreUI.Forms
             applyButton.Enabled = ready;
             serviceStateValueLabel.Text = _busy ? "正在处理…" : StateText(_serviceStatus.State);
             serviceStateValueLabel.ForeColor = _serviceStatus.IsRunning ? Color.FromArgb(30, 130, 82) : Color.FromArgb(70, 80, 96);
-            changesStateLabel.Text = _workspace.IsDirty ? "更改尚未保存" : "";
+            changesStateLabel.Text = _workspace.IsDirty ? "配置未保存" : (_workspace.Configuration == null ? "" : "✓ 配置已保存");
+            driverLabel.Text = _serviceStatus.IsRunning ? "Windows Packet Filter · 已就绪" : "Windows Packet Filter";
             if (trayStartItem != null)
             {
                 trayStartItem.Enabled = startServiceButton.Enabled;
@@ -258,6 +262,18 @@ namespace ProxiFyreUI.Forms
             }
         }
 
+        private void ToggleLogs(object sender, EventArgs args)
+        {
+            logBodyPanel.Visible = !logBodyPanel.Visible;
+            collapseLogsButton.Text = logBodyPanel.Visible ? "收起" : "展开";
+            ((CodexButton)collapseLogsButton).Glyph = logBodyPanel.Visible ? "up" : "down";
+            var logs = (TableLayoutPanel)logBodyPanel.Parent;
+            logs.AutoSize = !logBodyPanel.Visible;
+            rootPanel.RowStyles[3].SizeType = logBodyPanel.Visible ? SizeType.Percent : SizeType.AutoSize;
+            rootPanel.RowStyles[4].SizeType = logBodyPanel.Visible ? SizeType.AutoSize : SizeType.Percent;
+            rootPanel.RowStyles[4].Height = 100;
+            rootPanel.PerformLayout();
+        }
         private IEnumerable<string> Secrets()
         {
             var saved = _workspace.Configuration?.Proxies ?? new List<ProxyRule>();
@@ -359,7 +375,3 @@ namespace ProxiFyreUI.Forms
         }
     }
 }
-
-
-
-

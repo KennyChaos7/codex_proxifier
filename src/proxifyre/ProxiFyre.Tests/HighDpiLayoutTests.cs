@@ -14,11 +14,11 @@ namespace ProxiFyre.Tests
     [Apartment(ApartmentState.STA)]
     public sealed class HighDpiLayoutTests
     {
-        [Test]
-        public void CodexWindowActionsRemainUsableAtTwoHundredPercent()
+        [TestCase(false), TestCase(true)]
+        public void CodexWindowActionsRemainUsableAtTwoHundredPercent(bool authentication)
         {
             using (var form = new MainForm())
-            using (var scaled = ScaleToTwoHundredPercent(form))
+            using (var scaled = ScaleToTwoHundredPercentWithAuthentication(form, authentication))
             {
                 Assert.That(form.Text, Is.EqualTo("Codex Proxy"));
                 AssertControlsAreContained(GetControlTree(scaled.Surface).Where(control =>
@@ -74,6 +74,54 @@ namespace ProxiFyre.Tests
             }
         }
 
+        [Test]
+        public void RenderCandidateCardsForVisualReview()
+        {
+            Application.EnableVisualStyles();
+            var local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var candidates = new[] {
+                new ProxiFyreUI.Infrastructure.CodexPathCandidate {
+                    ExecutablePath = System.IO.Path.Combine(local, @"OpenAI\Codex\bin\2e5e00daee91c61d\codex.exe"),
+                    SourceLabel = "正在运行" },
+                new ProxiFyreUI.Infrastructure.CodexPathCandidate {
+                    ExecutablePath = System.IO.Path.Combine(local, @"Programs\OpenAI\Codex\bin\codex.exe"),
+                    SourceLabel = "PATH 命令" }
+            };
+            using (var form = new CodexPathPickerForm(candidates))
+            using (var bitmap = new Bitmap(form.Width, form.Height))
+            {
+                form.Show();
+                Application.DoEvents();
+                form.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bitmap.Size));
+                var path = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, "CodexProxy-PathPicker.png");
+                bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+                TestContext.AddTestAttachment(path);
+            }
+        }
+
+        [Test]
+        public void LogBodyCanBeCollapsedAndRestored()
+        {
+            using (var form = new PreviewMainForm())
+            {
+                form.Show();
+                Application.DoEvents();
+                var toggle = FindControl<Button>(form, "collapseLogsButton");
+                var body = FindControl<Panel>(form, "logBodyPanel");
+                Assert.That(body.Visible, Is.True);
+                toggle.PerformClick();
+                Assert.That(body.Visible, Is.False);
+                toggle.PerformClick();
+                Assert.That(body.Visible, Is.True);
+                Assert.That(FindControl<TextBox>(form, "logTextBox").ReadOnly, Is.True);
+            }
+        }
+
+        private static ScaledLayout ScaleToTwoHundredPercentWithAuthentication(MainForm form, bool authentication)
+        {
+            FindControl<CheckBox>(form, "authenticationCheckBox").Checked = authentication;
+            return ScaleToTwoHundredPercent(form);
+        }
         private sealed class PreviewMainForm : MainForm
         {
             // Render the actual controls without connecting to a host service or opening
@@ -169,8 +217,9 @@ namespace ProxiFyre.Tests
 
         private static T FindControl<T>(Control root, string name) where T : Control
         {
-            var field = root.GetType().GetField(name,
-                BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo field = null;
+            for (var type = root.GetType(); type != null && field == null; type = type.BaseType)
+                field = type.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.That(field, Is.Not.Null, "Expected a field named '{0}'.", name);
             var control = field.GetValue(root) as T;
             Assert.That(control, Is.Not.Null, "Expected '{0}' to be a {1}.", name,
@@ -210,7 +259,3 @@ namespace ProxiFyre.Tests
         }
     }
 }
-
-
-
-
