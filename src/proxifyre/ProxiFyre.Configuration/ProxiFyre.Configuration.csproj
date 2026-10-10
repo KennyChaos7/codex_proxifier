@@ -77,6 +77,7 @@
     <Compile Include="EndpointParser.cs" />
     <Compile Include="LogMessageLevelParser.cs" />
     <Compile Include="Models.cs" />
+    <Compile Include="CodexRoutingPolicy.cs" />
     <Compile Include="PathUtilities.cs" />
     <Compile Include="ServiceInstallLocationPolicy.cs" />
     <Compile Include="Validation.cs" />
@@ -109,3 +110,4 @@
     </ItemGroup>
   </Target>
 </Project>
+
