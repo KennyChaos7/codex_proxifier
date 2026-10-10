@@ -35,10 +35,10 @@ namespace ProxiFyreUI.Forms
             var root = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 6, Padding = new Padding(24) };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Percent, 60));
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Percent, 40));
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             Controls.Add(root);
             var header = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, ColumnCount = 2, RowCount = 2, Margin = new Padding(0, 0, 0, 20) };
@@ -55,10 +55,10 @@ namespace ProxiFyreUI.Forms
             changesStateLabel.Anchor = AnchorStyles.Right;
             header.Controls.Add(changesStateLabel, 1, 1);
             root.Controls.Add(header, 0, 0);
-            var cards = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
+            var cards = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
             cards.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40));
             cards.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60));
-            settingsPanel = new TableLayoutPanel { Name = "settingsPanel", Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 8, BackColor = Color.White, Padding = new Padding(16), Margin = new Padding(0, 0, 10, 0) };
+            settingsPanel = new TableLayoutPanel { Name = "settingsPanel", Dock = DockStyle.Fill, AutoSize = true, ColumnCount = 2, RowCount = 8, BackColor = Color.White, Padding = new Padding(16), Margin = new Padding(0, 0, 10, 0) };
             settingsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             settingsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             for (var i = 0; i < 8; i++) settingsPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -110,5 +110,6 @@ namespace ProxiFyreUI.Forms
         private static Button Button(string name, string text) { return new Button { Name = name, Text = text, AutoSize = true, Padding = new Padding(12, 5, 12, 5), Margin = new Padding(3, 3, 8, 3) }; }
     }
 }
+
 
 
