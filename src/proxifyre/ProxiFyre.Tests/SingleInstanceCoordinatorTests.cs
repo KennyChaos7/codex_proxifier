@@ -91,7 +91,7 @@ namespace ProxiFyre.Tests
             var prefix = SingleInstanceCoordinator.BuildObjectNamePrefix(user, 17);
 
             Assert.That(prefix, Is.EqualTo(
-                @"Local\ProxiFyreUI.7790e7d3-66f9-4e93-a9db-967ddcecc76d.S-1-5-21-1-2-3-1001.Session-17"));
+                @"Local\CodexProxy.7790e7d3-66f9-4e93-a9db-967ddcecc76d.S-1-5-21-1-2-3-1001.Session-17"));
         }
 
         [Test]
@@ -149,3 +149,4 @@ namespace ProxiFyre.Tests
         }
     }
 }
+

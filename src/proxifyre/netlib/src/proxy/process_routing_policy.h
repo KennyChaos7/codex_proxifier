@@ -169,6 +169,15 @@ namespace proxy
         if (app.empty())
             return true;
 
+        // Codex Proxy uses absolute paths: executable entries are exact, dedicated
+        // directories/package prefixes are anchored. A similar filename must stay direct.
+        const bool absolute_path = (app.size() > 2 && app[1] == L':' && app[2] == L'\\') ||
+            app.compare(0, 2, L"\\\\") == 0;
+        if (absolute_path)
+        {
+            const bool executable = app.size() >= 4 && app.compare(app.size() - 4, 4, L".EXE") == 0;
+            return executable ? process.path_name == app : process.path_name.compare(0, app.size(), app) == 0;
+        }
         return (app.find(L'\\') != std::wstring::npos || app.find(L'/') != std::wstring::npos)
                 ? (process.path_name.find(app) != std::wstring::npos)
                 : name_matches(process.name, app);
@@ -252,3 +261,4 @@ namespace proxy
         return result;
     }
 }
+

@@ -133,6 +133,24 @@ namespace
 
     // ------------------------------------------------------------------------------------
 
+    TEST_F(OwnerRoutingPolicyTest, CodexAbsolutePathsAreExactOrAnchored)
+    {
+        os().images[3900] = {L"CODEX.EXE", LR"(C:\CLI\CODEX.EXE)"};
+        os().images[3901] = {L"OTHER.EXE", LR"(C:\CLI\CODEX.EXE.OTHER.EXE)"};
+        os().images[3902] = {L"CHATGPT.EXE", LR"(C:\PROGRAM FILES\WINDOWSAPPS\OPENAI.CODEX_1\CHATGPT.EXE)"};
+        os().images[3903] = {L"CHATGPT.EXE", LR"(C:\PROGRAM FILES\WINDOWSAPPS\OPENAI.CHATGPT_1\CHATGPT.EXE)"};
+        add_everywhere(3900, 5000, 1); add_everywhere(3901, 5010, 1);
+        add_everywhere(3902, 5020, 1); add_everywhere(3903, 5030, 1);
+        lookup_v4 lookup;
+        routing_config config;
+        config.proxies.push_back({});
+        config.proxy_to_names.emplace(0, LR"(C:\CLI\CODEX.EXE)");
+        config.proxy_to_names.emplace(0, LR"(C:\PROGRAM FILES\WINDOWSAPPS\OPENAI.CODEX_)");
+        expect_route(config.route<tcp, ipv4>(tcp4(lookup, 5000)), proxy_port_action::proxy, 40001);
+        expect_route(config.route<tcp, ipv4>(tcp4(lookup, 5010)), proxy_port_action::none);
+        expect_route(config.route<udp, ipv4>(udp4(lookup, 5020)), proxy_port_action::proxy, 40002);
+        expect_route(config.route<udp, ipv4>(udp4(lookup, 5030)), proxy_port_action::none);
+    }
     TEST_F(OwnerRoutingPolicyTest, EachConnectionOfAnIdentityCarriesItsOwnDecision)
     {
         os().images[3000] = image(L"APP.EXE");
@@ -643,3 +661,5 @@ namespace
         EXPECT_EQ(proxy_to_names.begin()->second, L"APP.EXE") << "the pattern is upper-cased, as the router matches it";
     }
 }
+
+

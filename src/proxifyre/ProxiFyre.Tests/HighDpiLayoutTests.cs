@@ -15,68 +15,38 @@ namespace ProxiFyre.Tests
     public sealed class HighDpiLayoutTests
     {
         [Test]
-        public void MainWindowHeaderAndActionsRemainUsableAtTwoHundredPercent()
+        public void CodexWindowActionsRemainUsableAtTwoHundredPercent()
         {
             using (var form = new MainForm())
-            using (ScaleToTwoHundredPercent(form))
+            using (var scaled = ScaleToTwoHundredPercent(form))
             {
-                var title = FindControl<Label>(form, "titleLabel");
-                var serviceLabel = FindControl<Label>(form, "serviceStateLabel");
-                var serviceValue = FindControl<Label>(form, "serviceStateValueLabel");
-                var configurationLabel = FindControl<Label>(form, "configurationStateLabel");
-                var configurationValue = FindControl<Label>(form,
-                    "configurationStateValueLabel");
-                var changesLabel = FindControl<Label>(form, "changesStateLabel");
-                var changesValue = FindControl<Label>(form, "changesStateValueLabel");
-                var headerButtons = new[]
-                {
-                    FindControl<Button>(form, "startServiceButton"),
-                    FindControl<Button>(form, "stopServiceButton"),
-                    FindControl<Button>(form, "restartServiceButton"),
-                    FindControl<Button>(form, "installServiceButton"),
-                    FindControl<Button>(form, "headerUninstallServiceButton")
-                };
-
-                Assert.Multiple(() =>
-                {
-                    Assert.That(title.Right, Is.LessThan(serviceLabel.Left));
-                    Assert.That(serviceLabel.Right, Is.LessThanOrEqualTo(serviceValue.Left));
-                    Assert.That(serviceValue.Right, Is.LessThan(configurationLabel.Left));
-                    Assert.That(configurationLabel.Right,
-                        Is.LessThanOrEqualTo(configurationValue.Left));
-                    Assert.That(configurationValue.Right, Is.LessThan(changesLabel.Left));
-                    Assert.That(changesLabel.Right, Is.LessThanOrEqualTo(changesValue.Left));
-                    Assert.That(new[]
-                    {
-                        title.Bottom, serviceLabel.Bottom, serviceValue.Bottom,
-                        configurationLabel.Bottom, configurationValue.Bottom,
-                        changesLabel.Bottom, changesValue.Bottom
-                    }.Max(), Is.LessThan(headerButtons.Min(button => button.Top)));
-                });
-
-                AssertControlsAreContained(headerButtons.Cast<Control>());
-                AssertControlsAreContained(new Control[]
-                {
-                    FindControl<Button>(form, "reloadButton"),
-                    FindControl<Button>(form, "validateButton"),
-                    FindControl<Button>(form, "saveButton"),
-                    FindControl<Button>(form, "applyRestartButton")
-                });
-
-                var grid = FindControl<DataGridView>(form, "routingGrid");
-                Assert.That(grid.ColumnHeadersHeightSizeMode,
-                    Is.EqualTo(DataGridViewColumnHeadersHeightSizeMode.AutoSize));
+                Assert.That(form.Text, Is.EqualTo("Codex Proxy"));
+                AssertControlsAreContained(GetControlTree(scaled.Surface).Where(control =>
+                    control is Button || control is CheckBox || control is ComboBox));
+                Assert.That(FindControl<TextBox>(form, "passwordTextBox").UseSystemPasswordChar, Is.True);
+                Assert.That(FindControl<TextBox>(form, "logTextBox").ReadOnly, Is.True);
             }
         }
 
+        [Test]
+        public void RenderCodexWindowForVisualReview()
+        {
+            using (var form = new MainForm())
+            using (var bitmap = new Bitmap(form.Width, form.Height))
+            {
+                form.CreateControl();
+                form.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bitmap.Size));
+                var path = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, "CodexProxy-GUI.png");
+                bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+                TestContext.AddTestAttachment(path);
+            }
+        }
         [Test]
         public void DialogActionsRemainInsideTheirWindowsAtTwoHundredPercent()
         {
             var forms = new Form[]
             {
-                new InputDialog("Test", "Value:"),
-                new ProcessPickerForm(),
-                new ProxyRuleEditorForm(null, 0, 1)
+                new CodexPathPickerForm(new ProxiFyreUI.Infrastructure.CodexPathCandidate[0])
             };
             foreach (var form in forms)
             {
@@ -218,3 +188,5 @@ namespace ProxiFyre.Tests
         }
     }
 }
+
+

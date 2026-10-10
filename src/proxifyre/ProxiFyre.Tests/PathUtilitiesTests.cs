@@ -133,7 +133,7 @@ namespace ProxiFyre.Tests
             var settings = ProxiFyrePaths.GetUiSettingsPath(@"C:\Users\Test\AppData\Local");
             var configuration = ProxiFyrePaths.GetConfigurationPath(@"D:\Engine Folder\CodexProxy.Service.exe");
 
-            Assert.That(settings, Is.EqualTo(@"C:\Users\Test\AppData\Local\ProxiFyreUI\ui-settings.json"));
+            Assert.That(settings, Is.EqualTo(@"C:\Users\Test\AppData\Local\CodexProxy\ui-settings.json"));
             Assert.That(configuration, Is.EqualTo(@"D:\Engine Folder\app-config.json"));
             Assert.That(settings, Is.Not.EqualTo(configuration));
         }
@@ -146,3 +146,4 @@ namespace ProxiFyre.Tests
         }
     }
 }
+

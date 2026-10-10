@@ -321,7 +321,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 13：Debug GUI 集成核对
 
-- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
+- [x] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** 必要局部修复、step-13-debug-integration.md；不引入无关功能。
 
@@ -389,6 +389,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 **Expected:** 使用文档与已验证行为一致，整个独立产品可交付；有未完成关键步骤时不宣称最终完成。
 **Commit:** docs: 完成 Codex Proxy 使用文档与验收记录
+
 
 
 
