@@ -101,7 +101,7 @@ namespace ProxiFyreUI.Forms
                 bypassLanCheckBox.Checked = configuration.BypassLan;
                 logLevelComboBox.SelectedItem = new[] { "Error", "Warning", "Info", "Debug", "All" }
                     .FirstOrDefault(value => string.Equals(value, configuration.LogLevel, StringComparison.OrdinalIgnoreCase)) ?? "Info";
-                _selectedCliPath = rule?.AppNames?.FirstOrDefault(path =>
+                _selectedCliPath = rule?.AppNames?.LastOrDefault(path =>
                     string.Equals(Path.GetFileName(path), "codex.exe", StringComparison.OrdinalIgnoreCase) && File.Exists(path));
             }
             finally { _binding = false; }
@@ -109,7 +109,10 @@ namespace ProxiFyreUI.Forms
 
         private async Task RefreshTargetsAsync()
         {
-            var targets = await Task.Run(() => _discovery.Discover());
+            var savedCliPaths = (_workspace.Configuration?.Proxies?.FirstOrDefault()?.AppNames ?? new List<string>())
+                .Where(path => string.Equals(Path.GetFileName(path), "codex.exe", StringComparison.OrdinalIgnoreCase) && File.Exists(path)).ToList();
+            var discovered = await Task.Run(() => _discovery.Discover());
+            IReadOnlyList<string> targets = discovered.Concat(savedCliPaths).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
             if (_lifetime.IsCancellationRequested) return;
             if (!string.IsNullOrEmpty(_selectedCliPath) && File.Exists(_selectedCliPath)) targets =
                 targets.Concat(new[] { _selectedCliPath }).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
@@ -354,5 +357,6 @@ namespace ProxiFyreUI.Forms
         }
     }
 }
+
 
 
