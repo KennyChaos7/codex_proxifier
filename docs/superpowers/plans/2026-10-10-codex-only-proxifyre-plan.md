@@ -40,7 +40,7 @@
 
 ## 当前进度
 
-执行状态：00 已通过已认证 GitHub 接口同步；01 源码导入完成。用户要求开始自主执行，功能测试统一在实现结束后执行，实施勾选不代表测试通过。
+执行状态：00—01 已同步 GitHub；02 工具盘点完成。本机缺少 VS/SDK 且非管理员，03 改用受支持的 GitHub Windows 环境。功能测试统一在实现结束后执行，实施勾选不代表测试通过。
 
 | 编号 | 步骤 | 过程和结果记录 |
 | --- | --- | --- |
@@ -118,7 +118,7 @@
 
 ### 02：实测构建工具和依赖缺口
 
-- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
+- [x] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** step-02-toolchain.md；不修改源码。
 **Consumes:** 01 的实际工程/构建脚本。
@@ -133,14 +133,14 @@
 **Expected:** 明确当前环境能否进入基线构建，以及缺什么。
 **Commit:** docs: 记录 Codex Proxy 构建工具缺口
 
-### 03：配齐构建依赖
+### 03：配置 Windows 构建环境与依赖入口
 
 - [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** scripts/Build-CodexProxy.ps1 的依赖准备部分；step-03-dependencies.md。系统安装需授权，不将工具本体入库。
 
 操作：
-1. 在已授权的环境装齐 02 的具体缺项；优先已有 VS 安装补齐 v143/C++ CLI 和 .NET 4.7.2 targeting pack，或使用具备这些组件的构建环境。
+1. 使用 GitHub windows-2022 runner 的 VS 2022/v143/C++ CLI 和 .NET targeting pack；添加根 .github/workflows/build-codexproxy.yml，仅构建、不发布。工作流仅在其文件更新时触发，避免每次代码提交重复编译。
 2. 项目本地准备 NuGet/vcpkg/.NET SDK 下的 WiX；遵守上游锁定依赖，不擅自升级。
 3. 写脚本入口参数 Configuration=Debug/Release、固定 x64；按仓库位置解析源码，不硬编码本电脑用户名和 E 盘目录。
 4. 明确定位 VS MSBuild、NuGet、vcpkg、PS7 与 dotnet；缺工具给出具体错误，不生成“成功”产物。
@@ -389,6 +389,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 **Expected:** 使用文档与已验证行为一致，整个独立产品可交付；有未完成关键步骤时不宣称最终完成。
 **Commit:** docs: 完成 Codex Proxy 使用文档与验收记录
+
 
 
 
