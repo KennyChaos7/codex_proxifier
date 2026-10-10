@@ -61,6 +61,19 @@ namespace ProxiFyre.Tests
             }
         }
 
+        [Test]
+        public void EnabledAuthenticationWithoutCredentialsCannotBeSaved()
+        {
+            using (var form = new MainForm())
+            {
+                FindControl<CheckBox>(form, "authenticationCheckBox").Checked = true;
+                var method = typeof(MainForm).GetMethod("ReadConfiguration", BindingFlags.Instance | BindingFlags.NonPublic);
+                var error = Assert.Throws<TargetInvocationException>(() => method.Invoke(form, null));
+                Assert.That(error.InnerException, Is.TypeOf<InvalidOperationException>());
+                Assert.That(error.InnerException.Message, Does.Contain("用户名和密码"));
+            }
+        }
+
         private sealed class PreviewMainForm : MainForm
         {
             // Render the actual controls without connecting to a host service or opening
@@ -197,6 +210,7 @@ namespace ProxiFyre.Tests
         }
     }
 }
+
 
 
 

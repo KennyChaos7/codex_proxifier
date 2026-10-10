@@ -155,6 +155,8 @@ namespace ProxiFyreUI.Forms
 
         private void ReadConfiguration()
         {
+            if (authenticationCheckBox.Checked && usernameTextBox.Text.Length == 0 && passwordTextBox.Text.Length == 0)
+                throw new InvalidOperationException("启用认证时请填写用户名和密码。");
             var configuration = CodexRoutingPolicy.CreateConfiguration(_targets, new ProxyRule {
                 Socks5ProxyEndpoint = endpointTextBox.Text.Trim(),
                 Username = authenticationCheckBox.Checked ? usernameTextBox.Text : "",
@@ -357,6 +359,7 @@ namespace ProxiFyreUI.Forms
         }
     }
 }
+
 
 
 
