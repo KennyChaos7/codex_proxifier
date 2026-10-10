@@ -33,3 +33,18 @@
 - Run 38035800408 在 Bundle 包合同失败：架构条件正确，但测试仍精确期待旧的 This ProxiFyre 提示。
 - 同时核对最低 Windows 条件的旧品牌提示，生产者与消费者统一改为 Codex Proxy；保留架构及最低系统条件的精确断言。
 - 真实 GUI 位图已下载并目视确认：两栏设置、Codex 路径、服务操作、日志与托盘偏好均可见，没有裁切默认布局。
+
+
+## 最终结果（2026-10-10）
+
+- 最终源提交：2fedc550c9b62252d435e0509ad9bd0973abd96c。
+- CI Run 38036182436 全部成功：https://github.com/KennyChaos7/codex_proxifier/actions/runs/38036182436。
+- Debug 与 Release x64 编译通过；MSI、Burn、未签名及依赖合同通过。
+- 托管测试 323/323 通过；原生 OwnerRoutingPolicyTest 11/11 通过；UAC 清单检查通过。
+- 已下载独立程序到 artifacts/CodexProxy-Release-x64/，安装包到 artifacts/CodexProxy-0.1.0-x64/，测试结果到 artifacts/test-results-final/。
+- setup：CodexProxy-0.1.0-win-x64-setup.exe；MSI：CodexProxy-0.1.0-win-x64.msi。
+- 最终 GUI 渲染截图位于 artifacts/CodexProxy-GUI.png。截图来自测试窗口，没有连接真实代理服务。
+- 本机编译产物非管理员启动返回 740；发现 5 个 Codex 路径且共享范围校验通过（仅只读 smoke）。
+- 自动权限审核曾超时一次，文件写入与执行拆开后成功；没有遗留被拒绝的验证动作。
+- 本步骤完成。管理员安装及真实网络请求仍在步骤 15 保持未完成。
+

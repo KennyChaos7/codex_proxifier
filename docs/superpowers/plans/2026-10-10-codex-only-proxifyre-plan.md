@@ -40,7 +40,7 @@
 
 ## 当前进度
 
-执行状态：00—01 已同步 GitHub；02 工具盘点完成。本机缺少 VS/SDK 且非管理员，03 改用受支持的 GitHub Windows 环境。功能测试统一在实现结束后执行，实施勾选不代表测试通过。
+执行状态：00—14 已交付并完成最终自动化测试；15 的产物 UAC 与本机路径发现 smoke 已完成，但管理员安装和真实请求验收未完成，保持未勾选；16 使用文档与 Sol 源码复核已完成，待最后归档提交。
 
 | 编号 | 步骤 | 过程和结果记录 |
 | --- | --- | --- |
@@ -337,7 +337,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 14：Release 和独立安装包
 
-- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
+- [x] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** Build-CodexProxy.ps1、Build-Installer.ps1、受影响安装脚本/项目；README 构建说明。
 **Produces:** bin/exe/x64/Release/CodexProxy.exe、CodexProxy.Service.exe、必要 DLL；bin/installer/x64/Release 的独立 MSI/Setup。
@@ -389,6 +389,8 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 **Expected:** 使用文档与已验证行为一致，整个独立产品可交付；有未完成关键步骤时不宣称最终完成。
 **Commit:** docs: 完成 Codex Proxy 使用文档与验收记录
+
+
 
 
 
