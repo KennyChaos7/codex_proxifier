@@ -32,7 +32,7 @@ namespace ProxiFyreUI.Infrastructure
                            string.Join(Environment.NewLine, recent);
             }
 
-            return _redactor.Redact(message, secrets);
+            return CodexTargetDiscovery.FormatDisplayPath(_redactor.Redact(message, secrets));
         }
 
         public string FormatException(string summary, Exception exception, IEnumerable<string> secrets)
@@ -40,7 +40,8 @@ namespace ProxiFyreUI.Infrastructure
             var message = summary ?? string.Empty;
             if (exception != null && !string.IsNullOrWhiteSpace(exception.Message))
                 message += "\r\n\r\n" + exception.Message;
-            return _redactor.Redact(message, secrets);
+            return CodexTargetDiscovery.FormatDisplayPath(_redactor.Redact(message, secrets));
         }
     }
 }
+

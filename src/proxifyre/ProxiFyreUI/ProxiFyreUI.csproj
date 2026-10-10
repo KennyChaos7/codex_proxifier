@@ -73,6 +73,8 @@
     <Compile Include="Infrastructure\UserVisibleErrorFormatter.cs" />
     <Compile Include="Infrastructure\WinFormsFontBootstrap.cs" />
     <Compile Include="Infrastructure\WindowsPacketFilterProbe.cs" />
+    <Compile Include="Forms\CodexPathPickerForm.cs"><SubType>Form</SubType></Compile>
+    <Compile Include="Forms\CodexPathPickerForm.Designer.cs"><DependentUpon>CodexPathPickerForm.cs</DependentUpon></Compile>
     <Compile Include="Forms\InputDialog.cs"><SubType>Form</SubType></Compile>
     <Compile Include="Forms\InputDialog.Designer.cs"><DependentUpon>InputDialog.cs</DependentUpon></Compile>
     <Compile Include="Forms\MainForm.cs"><SubType>Form</SubType></Compile>
@@ -115,4 +117,5 @@
     <ItemGroup><Compile Include="$(IntermediateOutputPath)Version.cs" /></ItemGroup>
   </Target>
 </Project>
+
 

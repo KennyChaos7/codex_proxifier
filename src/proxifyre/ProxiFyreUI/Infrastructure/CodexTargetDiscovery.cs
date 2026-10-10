@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Text;
 
 namespace ProxiFyreUI.Infrastructure
 {
@@ -73,7 +75,7 @@ namespace ProxiFyreUI.Infrastructure
                     string.Equals(value.ExecutablePath, path, StringComparison.OrdinalIgnoreCase));
                 if (existing == null)
                     result.Add(new CodexPathCandidate { ExecutablePath = path,
-                        DisplayPath = path, SourceLabel = candidate.SourceLabel });
+                        DisplayPath = FormatDisplayPath(path), SourceLabel = candidate.SourceLabel });
                 else if (!existing.SourceLabel.Split(new[] { " · " }, StringSplitOptions.None).Contains(candidate.SourceLabel))
                     existing.SourceLabel += " · " + candidate.SourceLabel;
             }
@@ -106,7 +108,7 @@ namespace ProxiFyreUI.Infrastructure
         private static IEnumerable<string> RunningExecutables()
         {
             var result = new List<string>();
-            foreach (var name in new[] { "codex", "ChatGPT", "Codex" })
+            foreach (var name in new[] { "codex", "ChatGPT" })
                 foreach (var process in Process.GetProcessesByName(name))
                     using (process)
                     {
@@ -127,10 +129,10 @@ namespace ProxiFyreUI.Infrastructure
             var powershell = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System),
                 "WindowsPowerShell", "v1.0", "powershell.exe");
             var info = new ProcessStartInfo(powershell,
-                "-NoProfile -NonInteractive -Command \"Get-AppxPackage -Name OpenAI.Codex | Select-Object -ExpandProperty InstallLocation\"")
+                "-NoProfile -NonInteractive -Command \"[Console]::OutputEncoding = [Text.Encoding]::UTF8; Get-AppxPackage -Name OpenAI.Codex | Select-Object -ExpandProperty InstallLocation\"")
             {
                 UseShellExecute = false, CreateNoWindow = true,
-                RedirectStandardOutput = true, RedirectStandardError = true
+                RedirectStandardOutput = true, RedirectStandardError = true, StandardOutputEncoding = Encoding.UTF8
             };
             try
             {
@@ -148,10 +150,28 @@ namespace ProxiFyreUI.Infrastructure
             catch (Win32Exception) { return new string[0]; }
         }
 
+        public static string FormatDisplayPath(string value, string localApplicationData = null,
+            string userProfile = null)
+        {
+            if (string.IsNullOrEmpty(value)) return string.Empty;
+            var local = localApplicationData ?? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var profile = userProfile ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var result = value;
+            if (!string.IsNullOrWhiteSpace(local))
+                result = Regex.Replace(result, Regex.Escape(local.TrimEnd('\\')) + @"(?=\\|$)",
+                    "%LOCALAPPDATA%", RegexOptions.IgnoreCase);
+            if (!string.IsNullOrWhiteSpace(profile))
+                result = Regex.Replace(result, Regex.Escape(profile.TrimEnd('\\')) + @"(?=\\|$)",
+                    "%USERPROFILE%", RegexOptions.IgnoreCase);
+            return Regex.Replace(result, @"([A-Za-z]:\\Users\\)[^\\]+", "$1<用户>",
+                RegexOptions.IgnoreCase);
+        }
+
         private static CodexPathCandidate Candidate(string path, string source)
         {
             return new CodexPathCandidate { ExecutablePath = path, SourceLabel = source };
         }
     }
 }
+
 
