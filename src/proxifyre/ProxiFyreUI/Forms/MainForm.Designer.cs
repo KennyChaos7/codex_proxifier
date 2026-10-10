@@ -190,7 +190,7 @@ namespace ProxiFyreUI.Forms
             return panel;
         }
         private static Label Label(string name, string text)
-        { return new Label { Name = name, Text = text, AutoSize = true, Margin = new Padding(0, 4, 0, 4), Anchor = AnchorStyles.Left }; }
+        { return new Label { Name = name, Text = text, UseMnemonic = false, AutoSize = true, Margin = new Padding(0, 4, 0, 4), Anchor = AnchorStyles.Left }; }
         private static Label Heading(string name, string text)
         { var label = Label(name, text); label.Font = WinFormsFontBootstrap.CreateUiFont("Segoe UI", 11.5F, FontStyle.Bold); return label; }
         private static TextBox Input(string name, string text)

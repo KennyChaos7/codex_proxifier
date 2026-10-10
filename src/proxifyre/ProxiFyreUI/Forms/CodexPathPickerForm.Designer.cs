@@ -48,6 +48,7 @@ namespace ProxiFyreUI.Forms
             candidatesGrid.RowPrePaint += PaintCandidate;
             candidatesGrid.SelectionChanged += (sender, args) => candidatesGrid.Invalidate();
             candidatesGrid.FontChanged += (sender, args) => SizeCandidateRows();
+            candidatesGrid.SizeChanged += (sender, args) => SizeCandidateRows();
             var refresh = new CodexButton { Name = "refreshCandidatesButton", Text = "刷新候选路径",
                 Glyph = "refresh", Quiet = true, ForeColor = Color.FromArgb(62, 87, 138),
                 Padding = new Padding(3, 7, 3, 7), Margin = new Padding(0, 6, 0, 10), Anchor = AnchorStyles.Left };

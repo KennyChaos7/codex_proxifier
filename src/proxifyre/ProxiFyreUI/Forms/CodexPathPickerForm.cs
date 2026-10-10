@@ -39,9 +39,33 @@ namespace ProxiFyreUI.Forms
 
         private void SizeCandidateRows()
         {
-            foreach (DataGridViewRow row in candidatesGrid.Rows) row.Height = candidatesGrid.Font.Height * 4 + 22;
+            var font = candidatesGrid.Font;
+            var width = Math.Max(1, candidatesGrid.Width - SystemInformation.VerticalScrollBarWidth - (int)(122 * font.Height / 18F) - 4);
+            foreach (DataGridViewRow row in candidatesGrid.Rows)
+            {
+                var lines = WrapCandidatePath(row.Cells[0].Value.ToString(), font, width).Split(new[] { Environment.NewLine }, StringSplitOptions.None).Length;
+                row.Height = font.Height * (Math.Max(2, lines) + 2) + 22;
+            }
         }
 
+        private static string WrapCandidatePath(string path, Font font, int width)
+        {
+            var lines = new List<string>();
+            while (path.Length > 0)
+            {
+                var count = path.Length;
+                while (count > 1 && TextRenderer.MeasureText(path.Substring(0, count), font,
+                    Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix).Width > width) count--;
+                if (count < path.Length)
+                {
+                    var separator = path.LastIndexOf('\', count - 1, count);
+                    if (separator > 0) count = separator + 1;
+                }
+                lines.Add(path.Substring(0, count));
+                path = path.Substring(count);
+            }
+            return string.Join(Environment.NewLine, lines);
+        }
         private void PaintCandidate(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             e.Handled = true;
@@ -82,8 +106,8 @@ namespace ProxiFyreUI.Forms
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine);
             var text = new Rectangle(x, badge.Bottom + (int)(3 * scale),
                 card.Right - x - (int)(14 * scale), card.Bottom - badge.Bottom - (int)(8 * scale));
-            TextRenderer.DrawText(e.Graphics, row.Cells[0].Value.ToString(), Font, text, Color.FromArgb(62, 87, 138),
-                TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis);
+            TextRenderer.DrawText(e.Graphics, WrapCandidatePath(row.Cells[0].Value.ToString(), Font, text.Width), Font, text, Color.FromArgb(62, 87, 138),
+                TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix | TextFormatFlags.NoPadding);
         }
         private void UsePath(object sender, EventArgs args)
         {
