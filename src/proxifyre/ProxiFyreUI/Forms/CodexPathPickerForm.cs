@@ -58,7 +58,7 @@ namespace ProxiFyreUI.Forms
                     Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix).Width > width) count--;
                 if (count < path.Length)
                 {
-                    var separator = path.LastIndexOf('\', count - 1, count);
+                    var separator = path.LastIndexOf(Path.DirectorySeparatorChar, count - 1, count);
                     if (separator > 0) count = separator + 1;
                 }
                 lines.Add(path.Substring(0, count));
