@@ -66,7 +66,7 @@
 
     <bal:Condition
         Condition="VersionNT &gt; v6.1 OR (VersionNT = v6.1 AND ServicePackLevel &gt;= 1)"
-        Message="ProxiFyre requires Windows 7 SP1 or later. On Windows 7, install current servicing-stack and SHA-2 support updates, reboot, and run setup again." />
+        Message="Codex Proxy requires Windows 7 SP1 or later. On Windows 7, install current servicing-stack and SHA-2 support updates, reboot, and run setup again." />
 
     <!--
       Windows Packet Filter is a kernel driver and must match the native OS,
@@ -77,15 +77,15 @@
     <?if $(var.ProductArchitecture) = x86 ?>
       <bal:Condition
           Condition="(NOT VersionNT64 AND NOT NativeMachine) OR NativeMachine = 332"
-          Message="This ProxiFyre x86 setup requires 32-bit Windows. Download the setup that matches the native Windows architecture." />
+          Message="This Codex Proxy x86 setup requires 32-bit Windows. Download the setup that matches the native Windows architecture." />
     <?elseif $(var.ProductArchitecture) = x64 ?>
       <bal:Condition
           Condition="(VersionNT64 AND NOT NativeMachine) OR NativeMachine = 34404"
-          Message="This ProxiFyre x64 setup requires x64 Windows. Download the setup that matches the native Windows architecture." />
+          Message="This Codex Proxy x64 setup requires x64 Windows. Download the setup that matches the native Windows architecture." />
     <?elseif $(var.ProductArchitecture) = arm64 ?>
       <bal:Condition
           Condition="NativeMachine = 43620"
-          Message="This ProxiFyre ARM64 setup requires ARM64 Windows. Download the setup that matches the native Windows architecture." />
+          Message="This Codex Proxy ARM64 setup requires ARM64 Windows. Download the setup that matches the native Windows architecture." />
     <?else?>
       <?error Unsupported ProductArchitecture for the native setup condition. ?>
     <?endif?>
@@ -254,3 +254,4 @@
     </Chain>
   </Bundle>
 </Wix>
+

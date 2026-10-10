@@ -50,7 +50,7 @@
 
     <Launch
         Condition="Installed OR VersionNT &gt; 601 OR (VersionNT = 601 AND ServicePackLevel &gt;= 1)"
-        Message="ProxiFyre requires Windows 7 SP1 or later. On Windows 7, install current servicing-stack and SHA-2 support updates, reboot, and retry." />
+        Message="Codex Proxy requires Windows 7 SP1 or later. On Windows 7, install current servicing-stack and SHA-2 support updates, reboot, and retry." />
 
     <Property Id="NETFRAMEWORKRELEASE" Secure="yes">
       <RegistrySearch
@@ -103,7 +103,7 @@
     </Property>
     <Launch
         Condition="Installed OR (WPF_SERVICE_IMAGE AND ((VersionNT64 AND WPF_DRIVER64_COMPATIBLE) OR (NOT VersionNT64 AND WPF_DRIVER32_COMPATIBLE)))"
-        Message="ProxiFyre requires Windows Packet Filter 3.6.1 or later (but earlier than 4.0). Run the ProxiFyre Setup executable to download the official prerequisite, or install it from https://github.com/wiresock/ndisapi/releases and retry." />
+        Message="Codex Proxy requires Windows Packet Filter 3.6.1 or later (but earlier than 4.0). Run the Codex Proxy Setup executable to download the official prerequisite, or install it from https://github.com/wiresock/ndisapi/releases and retry." />
 
     <!--
       The setup bundle installs the pinned Microsoft runtime. Keep the MSI
@@ -152,7 +152,7 @@
     <?else?>
       <Launch
           Condition="Installed OR NETFRAMEWORKRELEASE &gt;= &quot;#461808&quot;"
-          Message="ProxiFyre requires Microsoft .NET Framework 4.7.2 or later." />
+          Message="Codex Proxy requires Microsoft .NET Framework 4.7.2 or later." />
     <?endif?>
 
     <StandardDirectory Id="ProgramFiles6432Folder">
@@ -321,3 +321,4 @@
     <WixVariable Id="WixUILicenseRtf" Value="$(LicenseRtfPath)" />
   </Package>
 </Wix>
+
