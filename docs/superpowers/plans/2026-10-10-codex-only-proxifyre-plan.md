@@ -19,7 +19,7 @@
 - 每个记录保存目标、开始/结束时间、输入和文件、实际操作与命令、实际输出摘要、验证结果、决定或偏离、遗留阻碍、提交说明与推送目标。命令输出很长时只摘录决定结果的部分。
 - 每步记录是长期事实来源，不另建重复的临时进度状态机。当前步骤的提交可用 git log -- 对应记录文件定位；不把提交自身的 SHA 写入它自身。上一提交的推送回执可写入下一步记录。
 - 提交信息简要描述更新的模块和功能。已有 config/、downloads/、scripts/、verification/ 和旧设计稿不自动加入提交、不删除。
-- 工具安装、系统驱动/服务安装、旧服务停止和防火墙变更仍需要专项明确授权。GUI 的默认管理员启动规则不构成这些操作的授权。
+- 用户最新授权：按计划自主执行必要工具配置与实施，不再重复征求同意；实际 OS 管理员能力、登录凭据和系统约束不能由文字授权替代。不扩大到合并、发布或无关系统变更。
 - 每步只运行能消除该步具体不确定性的验证。源码未改动前，导入只核对来源和核心文件；行为变更用可运行的测试和必要真实链路检查。
 - Sol 保留耦合实施与验收。独立任务需要委派时才另写路由回执，不预先声称已使用 Luna。
 
@@ -40,7 +40,7 @@
 
 ## 当前进度
 
-执行状态：00 的文档交付和核对已完成；首次推送因本机缺少 GitHub 凭据受阻。01 尚未开始。恢复条件：完成本机 GitHub 认证，成功推送 00，再顺序继续。
+执行状态：00 已通过已认证 GitHub 接口同步；01 源码导入完成。用户要求开始自主执行，功能测试统一在实现结束后执行，实施勾选不代表测试通过。
 
 | 编号 | 步骤 | 过程和结果记录 |
 | --- | --- | --- |
@@ -64,6 +64,10 @@
 
 以上记录均位于 docs/superpowers/execution/2026-10-10-codex-only-proxifyre/，对应步骤开始时创建。勾选状态以各编号步骤内的完成复选框为准。
 
+## 用户指定的测试执行顺序
+
+2026-10-10：实施阶段写代码及测试用例，但不逐步运行对应测试。所有 RED/GREEN 与逐步测试运行条目改为在 13—16 的最终验证阶段执行。必要依赖定位、源码来源核对和编译属于执行过程；结果必须如实记录，不能声明测试已通过。
+
 ## Review Focus
 
 | 可达失败 | 所属步骤及证据 |
@@ -79,7 +83,7 @@
 
 ### 00：详细计划与逐步记录
 
-- [x] **完成本步骤的交付物、验证与记录。**
+- [x] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** 本 plan、对应 spec、step-00-plan.md。
 **接口/不变量：** 后续实现接口不变；记录与代码同次归档，不混入无关未跟踪文件。
@@ -96,7 +100,7 @@
 
 ### 01：导入固定上游源码
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [x] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** 新建 src/proxifyre/ 上游源码及 UPSTREAM.md；根 .gitignore 仅增加该源码实际会产生的构建目录规则。
 **接口/不变量：** 不导入嵌套 .git；不激活根目录 GitHub 发布 workflow；不运行旧 Apply-CodexConfig.ps1。
@@ -114,7 +118,7 @@
 
 ### 02：实测构建工具和依赖缺口
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** step-02-toolchain.md；不修改源码。
 **Consumes:** 01 的实际工程/构建脚本。
@@ -131,7 +135,7 @@
 
 ### 03：配齐构建依赖
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** scripts/Build-CodexProxy.ps1 的依赖准备部分；step-03-dependencies.md。系统安装需授权，不将工具本体入库。
 
@@ -147,7 +151,7 @@
 
 ### 04：建立未修改上游 Debug 基线
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** scripts/Build-CodexProxy.ps1；step-04-baseline.md。
 **Consumes:** 未定制 src/proxifyre/ 和 03 的工具。
@@ -175,7 +179,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 05：程序身份与默认管理员启动
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** Directory.Build.props；ProxiFyre/ProxiFyre.csproj、Properties/AssemblyInfo.cs、Program.cs；ProxiFyreUI/ProxiFyreUI.csproj、Properties/AssemblyInfo.cs、app.manifest、Program.cs；ProxiFyreUILauncher/Program.cpp、Resources.rc、ProxiFyreUILauncher.vcxproj；ProxiFyre.Configuration/PathUtilities.cs；GUI Infrastructure/EngineLocator.cs、PayloadIntegrity.cs、SingleInstanceCoordinator.cs、UiSettings.cs；实际受影响测试。
 **Produces:** CodexProxy.exe、CodexProxy.Managed.dll、CodexProxy.Service.exe；默认 UAC 启动。
@@ -193,7 +197,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 06：独立安装与服务身份
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** ProxiFyre.Configuration/ServiceInstallLocationPolicy.cs、PathUtilities.cs；ProxiFyre.Installer/Package.wxs；ProxiFyre.Bundle/Bundle.wxs；对应 wixproj；scripts/Build-Installer.ps1；受影响安装测试。
 
@@ -210,7 +214,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 07：共享 Codex 路由策略
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** 新增 ProxiFyre.Configuration/CodexRoutingPolicy.cs；ProxiFyre.Tests/CodexRoutingPolicyTests.cs；对应 csproj。
 **Produces:**
@@ -230,7 +234,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 08：桌面与原生 CLI 路径发现
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** 新增 ProxiFyreUI/Infrastructure/CodexTargetDiscovery.cs；ProxiFyre.Tests/CodexTargetDiscoveryTests.cs；对应 csproj。
 **Produces:** Discover() -> IReadOnlyList<string>；FindCliCandidates() -> IReadOnlyList<CodexPathCandidate>；同文件定义 ExecutablePath、DisplayPath、SourceLabel。
@@ -248,7 +252,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 09：隐藏用户信息的候选选择
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** CodexTargetDiscovery.cs；新增 Forms/CodexPathPickerForm.cs、CodexPathPickerForm.Designer.cs；相应测试与 csproj。
 **Consumes:** 08 的 ExecutablePath/SourceLabel。
@@ -267,7 +271,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 10：后台使用同一范围约束
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** ProxiFyre/Program.cs、app-config.sample.json；后台加载/策略测试。
 **Consumes:** 07 的 ValidateConfiguration。
@@ -283,7 +287,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 11：Codex 专用主界面与配置应用
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** Forms/MainForm.cs、MainForm.Designer.cs；ConfigurationWorkspace/ConfigurationApplyCoordinator 的必要接入；相应测试及 csproj。
 **Consumes:** 07 策略、08 发现、09 选择窗体；保留 IProxiFyreServiceController、LogTailer、SingleInstanceCoordinator。
@@ -301,7 +305,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 12：托盘、日志和真实服务操作
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** MainForm、托盘/服务协调的必要接入；相关测试。不另建服务状态机。
 
@@ -317,7 +321,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 13：Debug GUI 集成核对
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** 必要局部修复、step-13-debug-integration.md；不引入无关功能。
 
@@ -333,7 +337,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 14：Release 和独立安装包
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** Build-CodexProxy.ps1、Build-Installer.ps1、受影响安装脚本/项目；README 构建说明。
 **Produces:** bin/exe/x64/Release/CodexProxy.exe、CodexProxy.Service.exe、必要 DLL；bin/installer/x64/Release 的独立 MSI/Setup。
@@ -350,7 +354,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 15：受控安装和真实请求验收
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** verification/codex-proxy-smoke.md；step-15-smoke.md；必要局部修复。
 **授权前提：** 明确同意安装新产品/驱动或复用已有驱动、切换服务和必要防火墙操作；授权未到保持未完成。
@@ -371,7 +375,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 16：最终使用文档与整支审查
 
-- [ ] **完成本步骤的交付物、验证与记录。**
+- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** README.md；源码许可/修改说明；step-16-review.md；必要局部修复。
 
@@ -385,5 +389,6 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 **Expected:** 使用文档与已验证行为一致，整个独立产品可交付；有未完成关键步骤时不宣称最终完成。
 **Commit:** docs: 完成 Codex Proxy 使用文档与验收记录
+
 
 
