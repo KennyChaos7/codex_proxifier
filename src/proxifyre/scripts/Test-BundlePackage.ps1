@@ -387,7 +387,7 @@ try {
     })
     if ($nativeArchitectureConditions.Count -ne 1 -or
         $nativeArchitectureConditions[0].GetAttribute('Message') -cne
-            "This ProxiFyre $expectedSetupArchitectureLabel setup requires $expectedWindowsArchitectureLabel Windows. Download the setup that matches the native Windows architecture.") {
+            "This Codex Proxy $expectedSetupArchitectureLabel setup requires $expectedWindowsArchitectureLabel Windows. Download the setup that matches the native Windows architecture.") {
         throw 'The bundle must reject a native Windows architecture that does not match its WPF driver package.'
     }
     $minimumWindowsConditions = @($bundleConditions | Where-Object {
@@ -397,7 +397,7 @@ try {
     if ($bundleConditions.Count -ne 2 -or
         $minimumWindowsConditions.Count -ne 1 -or
         $minimumWindowsConditions[0].GetAttribute('Message') -cne
-            'ProxiFyre requires Windows 7 SP1 or later. On Windows 7, install current servicing-stack and SHA-2 support updates, reboot, and run setup again.') {
+            'Codex Proxy requires Windows 7 SP1 or later. On Windows 7, install current servicing-stack and SHA-2 support updates, reboot, and run setup again.') {
         throw 'The bundle must reject Windows 7 RTM before acquiring prerequisites.'
     }
     if ($visualCppPayload.GetAttribute('FilePath') -cne
@@ -571,4 +571,5 @@ finally {
 }
 
 Write-Output "Validated ProxiFyre $Version $Architecture Burn prerequisites and package metadata."
+
 
