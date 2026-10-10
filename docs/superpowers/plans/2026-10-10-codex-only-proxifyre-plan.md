@@ -287,7 +287,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 11：Codex 专用主界面与配置应用
 
-- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
+- [x] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** Forms/MainForm.cs、MainForm.Designer.cs；ConfigurationWorkspace/ConfigurationApplyCoordinator 的必要接入；相应测试及 csproj。
 **Consumes:** 07 策略、08 发现、09 选择窗体；保留 IProxiFyreServiceController、LogTailer、SingleInstanceCoordinator。
@@ -389,6 +389,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 **Expected:** 使用文档与已验证行为一致，整个独立产品可交付；有未完成关键步骤时不宣称最终完成。
 **Commit:** docs: 完成 Codex Proxy 使用文档与验收记录
+
 
 
 

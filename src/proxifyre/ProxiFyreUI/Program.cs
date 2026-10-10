@@ -51,7 +51,7 @@ namespace ProxiFyreUI
                 using (var writer = new StreamWriter(logPath, false,
                     new UTF8Encoding(false)))
                 {
-                    writer.WriteLine("ProxiFyre UI managed startup failure");
+                    writer.WriteLine("Codex Proxy managed startup failure");
                     writer.WriteLine("UTC: " + DateTime.UtcNow.ToString("O",
                         CultureInfo.InvariantCulture));
                     writer.WriteLine("CLR: " + Environment.Version);
@@ -96,8 +96,8 @@ namespace ProxiFyreUI
             catch
             {
                 MessageBox.Show(
-                    "The ProxiFyre UI payload is incomplete or failed its local integrity check. Reinstall it from an official ProxiFyre package.",
-                    "ProxiFyre UI integrity check", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "The Codex Proxy payload is incomplete or failed its local integrity check. Reinstall it from an Codex Proxy package.",
+                    "Codex Proxy integrity check", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -172,9 +172,10 @@ namespace ProxiFyreUI
             // Fail closed instead of surfacing arbitrary exception text that could contain a
             // password copied into a third-party/OS exception message.
             MessageBox.Show(
-                "An unexpected ProxiFyre UI error occurred. Restart the application and review the redacted diagnostics and service logs.",
-                "ProxiFyre UI", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                "An unexpected Codex Proxy error occurred. Restart the application and review the redacted diagnostics and service logs.",
+                "Codex Proxy", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
 }
+
