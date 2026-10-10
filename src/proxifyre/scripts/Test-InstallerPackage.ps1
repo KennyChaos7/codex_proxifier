@@ -71,11 +71,11 @@ try {
     }
 
     $requiredFiles = @(
-        'ProxiFyre.exe',
-        'ProxiFyre.exe.config',
-        'ProxiFyreUI.exe',
-        'ProxiFyreUI.exe.config',
-        'ProxiFyreUI.Managed.dll',
+        'CodexProxy.Service.exe',
+        'CodexProxy.Service.exe.config',
+        'CodexProxy.exe',
+        'CodexProxy.exe.config',
+        'CodexProxy.Managed.dll',
         'ProxiFyre.Configuration.dll',
         'socksify.dll',
         'Newtonsoft.Json.dll',
@@ -119,7 +119,7 @@ try {
 
     $shortcuts = @(Get-Rows 'SELECT `Name`, `Target` FROM `Shortcut`')
     if ($shortcuts.Count -ne 2 -or @($shortcuts | Where-Object { $_[1] -notmatch 'ProxiFyreUI\.exe' }).Count -ne 0) {
-        throw 'Both installer shortcuts must launch ProxiFyreUI.exe.'
+        throw 'Both installer shortcuts must launch CodexProxy.exe.'
     }
 
     $tableNames = @(Get-Rows 'SELECT `Name` FROM `_Tables`' | ForEach-Object { [string]$_[0] })
@@ -140,7 +140,7 @@ try {
     })
     if ($firewallRows.Count -ne 2 -or $invalidFirewallRows.Count -ne 0 -or
         $protocols[0] -ne 6 -or $protocols[1] -ne 17) {
-        throw 'The MSI must own exactly the program-scoped TCP and UDP inbound rules for ProxiFyre.exe.'
+        throw 'The MSI must own exactly the program-scoped TCP and UDP inbound rules for CodexProxy.Service.exe.'
     }
 
     $launchConditions = @(Get-Rows 'SELECT `Condition`, `Description` FROM `LaunchCondition`')

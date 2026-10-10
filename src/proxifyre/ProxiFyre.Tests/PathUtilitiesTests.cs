@@ -13,9 +13,9 @@ namespace ProxiFyre.Tests
         public void QuotedServiceImagePathExtractsOnlyExecutable()
         {
             var result = ServiceImagePathParser.GetExecutablePath(
-                @"""C:\Program Files\ProxiFyre\ProxiFyre.exe"" --service --fixed");
+                @"""C:\Program Files\ProxiFyre\CodexProxy.Service.exe"" --service --fixed");
 
-            Assert.That(result, Is.EqualTo(@"C:\Program Files\ProxiFyre\ProxiFyre.exe"));
+            Assert.That(result, Is.EqualTo(@"C:\Program Files\ProxiFyre\CodexProxy.Service.exe"));
         }
 
         [Test]
@@ -24,7 +24,7 @@ namespace ProxiFyre.Tests
             string result;
 
             Assert.That(ServiceImagePathParser.TryGetExecutablePath(
-                @"C:\Program Files\ProxiFyre\ProxiFyre.exe run-as-service", out result), Is.False);
+                @"C:\Program Files\ProxiFyre\CodexProxy.Service.exe run-as-service", out result), Is.False);
             Assert.That(result, Is.Null);
         }
 
@@ -32,15 +32,15 @@ namespace ProxiFyre.Tests
         public void UnquotedEnginePathWithoutSpacesCanIncludeFixedArguments()
         {
             var result = ServiceImagePathParser.GetExecutablePath(
-                @"C:\ProxiFyre\ProxiFyre.exe run-as-service");
+                @"C:\ProxiFyre\CodexProxy.Service.exe run-as-service");
 
-            Assert.That(result, Is.EqualTo(@"C:\ProxiFyre\ProxiFyre.exe"));
+            Assert.That(result, Is.EqualTo(@"C:\ProxiFyre\CodexProxy.Service.exe"));
         }
 
-        [TestCase("ProxiFyre.exe")]
-        [TestCase(@".\ProxiFyre.exe")]
-        [TestCase(@"C:ProxiFyre.exe")]
-        [TestCase(@"\Program Files\ProxiFyre\ProxiFyre.exe")]
+        [TestCase("CodexProxy.Service.exe")]
+        [TestCase(@".\CodexProxy.Service.exe")]
+        [TestCase(@"C:CodexProxy.Service.exe")]
+        [TestCase(@"\Program Files\ProxiFyre\CodexProxy.Service.exe")]
         public void RelativeServiceImagePathsAreRejected(string value)
         {
             string result;
@@ -50,8 +50,8 @@ namespace ProxiFyre.Tests
         }
 
         [TestCase("")]
-        [TestCase(@"""C:\Program Files\ProxiFyre\ProxiFyre.exe --broken")]
-        [TestCase(@"""C:\Program Files\ProxiFyre\ProxiFyre.exe""unexpected")]
+        [TestCase(@"""C:\Program Files\ProxiFyre\CodexProxy.Service.exe --broken")]
+        [TestCase(@"""C:\Program Files\ProxiFyre\CodexProxy.Service.exe""unexpected")]
         [TestCase(@"C:\Program Files\ProxiFyre\not-an-executable.dll --service")]
         public void InvalidServiceImagePathIsRejected(string value)
         {
@@ -63,9 +63,9 @@ namespace ProxiFyre.Tests
         [Test]
         public void InstalledServicePathTakesPrecedence()
         {
-            var servicePath = @"C:\Service Engine\ProxiFyre.exe";
-            var besideUi = @"D:\Gui\ProxiFyre.exe";
-            var saved = @"E:\Saved\ProxiFyre.exe";
+            var servicePath = @"C:\Service Engine\CodexProxy.Service.exe";
+            var besideUi = @"D:\Gui\CodexProxy.Service.exe";
+            var saved = @"E:\Saved\CodexProxy.Service.exe";
             var existing = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
                 servicePath,
@@ -75,8 +75,8 @@ namespace ProxiFyre.Tests
             var resolver = new EnginePathResolver(existing.Contains);
 
             var result = resolver.Resolve(
-                @"""C:\Service Engine\ProxiFyre.exe"" --service",
-                @"D:\Gui\ProxiFyreUI.exe",
+                @"""C:\Service Engine\CodexProxy.Service.exe"" --service",
+                @"D:\Gui\CodexProxy.exe",
                 saved);
 
             Assert.That(result.Found, Is.True);
@@ -87,11 +87,11 @@ namespace ProxiFyre.Tests
         [Test]
         public void EngineBesideUiIsUsedWhenNoInstalledServiceExists()
         {
-            var besideUi = @"D:\Portable ProxiFyre\ProxiFyre.exe";
+            var besideUi = @"D:\Portable ProxiFyre\CodexProxy.Service.exe";
             var resolver = new EnginePathResolver(
                 path => string.Equals(path, besideUi, StringComparison.OrdinalIgnoreCase));
 
-            var result = resolver.Resolve(null, @"D:\Portable ProxiFyre\ProxiFyreUI.exe", null);
+            var result = resolver.Resolve(null, @"D:\Portable ProxiFyre\CodexProxy.exe", null);
 
             Assert.That(result.Source, Is.EqualTo(EngineLocationSource.BesideUi));
             Assert.That(result.EnginePath, Is.EqualTo(besideUi));
@@ -101,11 +101,11 @@ namespace ProxiFyre.Tests
         [Test]
         public void SavedEngineCanBeLocatedWhenGuiIsInstalledSeparately()
         {
-            var saved = @"E:\Engines\ProxiFyre\ProxiFyre.exe";
+            var saved = @"E:\Engines\ProxiFyre\CodexProxy.Service.exe";
             var resolver = new EnginePathResolver(
                 path => string.Equals(path, saved, StringComparison.OrdinalIgnoreCase));
 
-            var result = resolver.Resolve(null, @"C:\Tools\ProxiFyreUI.exe", saved);
+            var result = resolver.Resolve(null, @"C:\Tools\CodexProxy.exe", saved);
 
             Assert.That(result.Source, Is.EqualTo(EngineLocationSource.SavedSetting));
             Assert.That(result.EnginePath, Is.EqualTo(saved));
@@ -117,9 +117,9 @@ namespace ProxiFyre.Tests
             var resolver = new EnginePathResolver(path => false);
 
             var result = resolver.Resolve(
-                @"""C:\Missing\ProxiFyre.exe"" --service",
-                @"D:\Missing Gui\ProxiFyreUI.exe",
-                @"E:\Also Missing\ProxiFyre.exe");
+                @"""C:\Missing\CodexProxy.Service.exe"" --service",
+                @"D:\Missing Gui\CodexProxy.exe",
+                @"E:\Also Missing\CodexProxy.Service.exe");
 
             Assert.That(result.Found, Is.False);
             Assert.That(result.Source, Is.EqualTo(EngineLocationSource.None));
@@ -131,7 +131,7 @@ namespace ProxiFyre.Tests
         public void LocalAppDataSettingsRemainSeparateFromEngineConfiguration()
         {
             var settings = ProxiFyrePaths.GetUiSettingsPath(@"C:\Users\Test\AppData\Local");
-            var configuration = ProxiFyrePaths.GetConfigurationPath(@"D:\Engine Folder\ProxiFyre.exe");
+            var configuration = ProxiFyrePaths.GetConfigurationPath(@"D:\Engine Folder\CodexProxy.Service.exe");
 
             Assert.That(settings, Is.EqualTo(@"C:\Users\Test\AppData\Local\ProxiFyreUI\ui-settings.json"));
             Assert.That(configuration, Is.EqualTo(@"D:\Engine Folder\app-config.json"));
@@ -141,7 +141,7 @@ namespace ProxiFyre.Tests
         [Test]
         public void EngineValidationRequiresExpectedExecutableName()
         {
-            Assert.That(ProxiFyrePaths.IsEngineExecutable(@"C:\Engine\ProxiFyre.exe"), Is.True);
+            Assert.That(ProxiFyrePaths.IsEngineExecutable(@"C:\Engine\CodexProxy.Service.exe"), Is.True);
             Assert.That(ProxiFyrePaths.IsEngineExecutable(@"C:\Engine\Other.exe"), Is.False);
         }
     }

@@ -152,11 +152,11 @@ jobs:
         run: |
           $payload = "bin\exe\${{ matrix.platform }}\${{ matrix.build_configuration }}"
           @(
-            'ProxiFyre.exe',
-            'ProxiFyre.exe.config',
-            'ProxiFyreUI.exe',
-            'ProxiFyreUI.Managed.dll',
-            'ProxiFyreUI.exe.config',
+            'CodexProxy.Service.exe',
+            'CodexProxy.Service.exe.config',
+            'CodexProxy.exe',
+            'CodexProxy.Managed.dll',
+            'CodexProxy.exe.config',
             'ProxiFyre.Configuration.dll',
             'socksify.dll',
             'Newtonsoft.Json.dll',
@@ -175,9 +175,9 @@ jobs:
         run: |
           $payload = "bin\exe\${{ matrix.platform }}\${{ matrix.build_configuration }}"
           $modules = @(
-            'ProxiFyre.exe',
-            'ProxiFyreUI.exe',
-            'ProxiFyreUI.Managed.dll',
+            'CodexProxy.Service.exe',
+            'CodexProxy.exe',
+            'CodexProxy.Managed.dll',
             'ProxiFyre.Configuration.dll',
             'socksify.dll'
           ) | ForEach-Object { Join-Path $payload $_ }

@@ -58,14 +58,14 @@ Windows 7 is supported only with Service Pack 1. A fully patched image with curr
 Portable launchers can opt into a limited interactive mode after Windows Packet Filter is installed:
 
 ```console
-ProxiFyre.exe --allow-not-admin
+CodexProxy.Service.exe --allow-not-admin
 ```
 
 The switch is exact and case-sensitive. This mode cannot install, start, stop, or remove the Windows service, or send custom service-control commands. Process attribution is best effort without administrator rights: traffic whose owner cannot be resolved—which may include protected, elevated, system, or other-user processes—remains direct even when a catch-all rule is configured. Treat this as a compatibility mode for selected applications, not a strict current-user security boundary. See the [configuration reference](docs/configuration.md#optional-unelevated-console-mode) for details.
 
 ## Configuration
 
-The GUI edits `app-config.json` beside `ProxiFyre.exe`. A minimal configuration looks like this:
+The GUI edits `app-config.json` beside `CodexProxy.Service.exe`. A minimal configuration looks like this:
 
 ```json
 {
@@ -110,7 +110,7 @@ Set `socks5Transport` to `"TLS"` to protect the SOCKS5 TCP connection and UDP `A
 - IPv6 proxying requires working IPv6 connectivity on the client and a SOCKS5 server that accepts IPv6 targets (`ATYP=4`). ProxiFyre redirects packets the application emits; it does not create IPv6 connectivity.
 - Fragmented IPv6 datagrams are passed through directly to avoid corrupting partial packets. Applications that emit oversized fragmented UDP datagrams can therefore bypass the proxy.
 - SOCKS5 usernames and passwords are stored in plaintext in `app-config.json`, although the GUI masks and redacts them from its diagnostics.
-- The MSI creates program-specific inbound TCP and UDP firewall rules for `ProxiFyre.exe` because redirect listener ports are allocated dynamically.
+- The MSI creates program-specific inbound TCP and UDP firewall rules for `CodexProxy.Service.exe` because redirect listener ports are allocated dynamically.
 
 ## Documentation
 

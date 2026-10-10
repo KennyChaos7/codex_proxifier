@@ -1,6 +1,6 @@
 # ProxiFyre configuration reference
 
-ProxiFyre reads `app-config.json` from the directory containing the resolved `ProxiFyre.exe`. The GUI is the recommended editor: it validates the complete model, preserves unknown JSON properties, writes atomically, and keeps the previous file as `app-config.json.bak`.
+ProxiFyre reads `app-config.json` from the directory containing the resolved `CodexProxy.Service.exe`. The GUI is the recommended editor: it validates the complete model, preserves unknown JSON properties, writes atomically, and keeps the previous file as `app-config.json.bak`.
 
 Configuration changes do not alter a running service. Use **Apply & Restart** in the GUI, or restart `ProxiFyreService` after editing the file manually.
 
@@ -9,7 +9,7 @@ Configuration changes do not alter a running service. Use **Apply & Restart** in
 The normal GUI and Windows service workflows remain elevated. A portable manager can instead start the engine in an explicitly limited, interactive console mode:
 
 ```console
-ProxiFyre.exe --allow-not-admin
+CodexProxy.Service.exe --allow-not-admin
 ```
 
 `--allow-not-admin` is an exact, case-sensitive opt-in and is accepted only for a normal interactive run. It cannot be combined with Topshelf's `install`, `uninstall`, `start`, or `stop` lifecycle commands or its `command` service-control verb, and it has no effect on service execution. Windows Packet Filter must already be installed and accessible; if the engine cannot open the driver, startup fails instead of silently running without redirection. The engine writes a prominent warning to the console and log whenever the limited mode is active.
@@ -148,6 +148,6 @@ For a self-signed laboratory endpoint, prefer `tlsPinnedSha256`. The pin is the 
 | `Debug` | Adds per-connection routing, proxy negotiation, and relay details. |
 | `All` | Maximum native and managed detail. |
 
-Engine logs are written beneath the `logs` directory beside `ProxiFyre.exe`. Changing `logLevel` requires a service restart. The Logs-tab **View filter** is display-only: it filters lines already written and does not change engine verbosity or require a restart.
+Engine logs are written beneath the `logs` directory beside `CodexProxy.Service.exe`. Changing `logLevel` requires a service restart. The Logs-tab **View filter** is display-only: it filters lines already written and does not change engine verbosity or require a restart.
 
 For log following, rotation, file access, and troubleshooting, see [gui.md](gui.md#logs-and-notification-area).

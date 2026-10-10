@@ -12,7 +12,7 @@ Set-StrictMode -Version Latest
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $sourcePath = Join-Path $repositoryRoot 'ProxiFyreUILauncher\Program.cpp'
 $launcherPath = Join-Path $repositoryRoot (
-    "bin\exe\$Platform\Release\ProxiFyreUI.exe")
+    "bin\exe\$Platform\Release\CodexProxy.exe")
 
 $source = [IO.File]::ReadAllText($sourcePath)
 $requiredSourceFragments = @(

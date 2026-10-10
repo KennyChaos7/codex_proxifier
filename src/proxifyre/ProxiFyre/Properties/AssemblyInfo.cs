@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ProxiFyre")]
+[assembly: AssemblyTitle("Codex Proxy Service")]
 [assembly: AssemblyDescription("ProxiFyre – A fast, flexible proxy engine for traffic redirection, filtering, and secure tunneling, powered by the Windows Packet Filter driver.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("NT KERNEL")]
-[assembly: AssemblyProduct("ProxiFyre")]
+[assembly: AssemblyProduct("Codex Proxy")]
 [assembly: AssemblyCopyright("Copyright NT KERNEL© 2022-2026")]
 [assembly: AssemblyTrademark("ProxiFyre")]
 [assembly: AssemblyCulture("")]

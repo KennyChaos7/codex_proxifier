@@ -21,11 +21,11 @@ BEGIN
     BLOCK "040904b0"
     BEGIN
       VALUE "CompanyName", "NT KERNEL\0"
-      VALUE "FileDescription", "ProxiFyre UI native integrity host\0"
+      VALUE "FileDescription", "Codex Proxy native integrity host\0"
       VALUE "FileVersion", PROXIFYRE_VERSION_STRING "\0"
-      VALUE "InternalName", "ProxiFyreUI\0"
-      VALUE "OriginalFilename", "ProxiFyreUI.exe\0"
-      VALUE "ProductName", "ProxiFyre\0"
+      VALUE "InternalName", "CodexProxy\0"
+      VALUE "OriginalFilename", "CodexProxy.exe\0"
+      VALUE "ProductName", "Codex Proxy\0"
       VALUE "ProductVersion", PROXIFYRE_VERSION_STRING "\0"
     END
   END

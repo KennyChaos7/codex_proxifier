@@ -364,7 +364,7 @@ namespace ProxiFyreUI.Infrastructure
                 fullUiPath,
                 Path.Combine(directory, "ProxiFyre.Configuration.dll"),
                 Path.Combine(directory, "Newtonsoft.Json.dll"),
-                Path.Combine(directory, "ProxiFyreUI.exe.config")
+                Path.Combine(directory, "CodexProxy.exe.config")
             };
         }
 
@@ -373,13 +373,13 @@ namespace ProxiFyreUI.Infrastructure
             if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
                 return false;
             var fileName = Path.GetFileName(path);
-            if (string.Equals(fileName, "ProxiFyreUI.Managed.dll", StringComparison.OrdinalIgnoreCase) ||
+            if (string.Equals(fileName, "CodexProxy.Managed.dll", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(fileName, "ProxiFyre.Configuration.dll",
                     StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(fileName, "Newtonsoft.Json.dll",
                     StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (string.Equals(fileName, "ProxiFyreUI.exe.config",
+            if (string.Equals(fileName, "CodexProxy.exe.config",
                     StringComparison.OrdinalIgnoreCase))
                 return PayloadHashValidator.HasExpectedSha256(path, UiConfigurationSha256);
             return false;

@@ -35,7 +35,7 @@
     <ProxiFyrePlatform Condition="'$(ProxiFyrePlatform)'==''">$(Platform)</ProxiFyrePlatform>
     <OutDir>$(ProjectDir)..\bin\exe\$(ProxiFyrePlatform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\bin\obj\ProxiFyreUILauncher\$(ProxiFyrePlatform)\$(Configuration)\</IntDir>
-    <TargetName>ProxiFyreUI</TargetName>
+    <TargetName>CodexProxy</TargetName>
     <ProxiFyreApplicationManifest>$(IntDir)ProxiFyreUI.app.manifest</ProxiFyreApplicationManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">

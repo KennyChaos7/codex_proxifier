@@ -7,7 +7,7 @@
     <ProjectGuid>{A1A4E931-740F-4CD4-9D81-2A49D114EDFF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ProxiFyre</RootNamespace>
-    <AssemblyName>ProxiFyre</AssemblyName>
+    <AssemblyName>CodexProxy.Service</AssemblyName>
     <ApplicationIcon>..\assets\ProxiFyre.ico</ApplicationIcon>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

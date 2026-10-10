@@ -1088,7 +1088,7 @@ namespace ProxiFyreUI.Infrastructure
                 !IsFullyQualifiedWindowsPath(enginePath))
             {
                 throw new ArgumentException(
-                    "A fully qualified ProxiFyre.exe path is required.", nameof(enginePath));
+                    "A fully qualified CodexProxy.Service.exe path is required.", nameof(enginePath));
             }
 
             // Force the same canonicalization checks used by the payload lease without requiring

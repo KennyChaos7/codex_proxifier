@@ -684,7 +684,7 @@ namespace
     bool IsAllowedPortableExecutable(const std::wstring& name)
     {
         static const wchar_t* allowed[] = {
-            L"ProxiFyreUI.exe", L"ProxiFyreUI.Managed.dll", L"ProxiFyre.exe",
+            L"CodexProxy.exe", L"CodexProxy.Managed.dll", L"CodexProxy.Service.exe",
             L"ProxiFyre.Configuration.dll", L"socksify.dll", L"Newtonsoft.Json.dll",
             L"NLog.dll", L"Topshelf.dll"
         };
@@ -723,9 +723,9 @@ namespace
 
     bool HasUiLoaderRedirection(const std::wstring& directory)
     {
-        return GetFileAttributesW(JoinPath(directory, L"ProxiFyreUI.exe.local").c_str()) !=
+        return GetFileAttributesW(JoinPath(directory, L"CodexProxy.exe.local").c_str()) !=
                    INVALID_FILE_ATTRIBUTES ||
-               GetFileAttributesW(JoinPath(directory, L"ProxiFyreUI.exe.manifest").c_str()) !=
+               GetFileAttributesW(JoinPath(directory, L"CodexProxy.exe.manifest").c_str()) !=
                    INVALID_FILE_ATTRIBUTES;
     }
 
@@ -743,7 +743,7 @@ namespace
         const std::wstring executableName = executableNameOffset == std::wstring::npos
             ? executablePath
             : executablePath.substr(executableNameOffset + 1);
-        if (_wcsicmp(executableName.c_str(), L"ProxiFyreUI.exe") != 0 ||
+        if (_wcsicmp(executableName.c_str(), L"CodexProxy.exe") != 0 ||
             HasUiLoaderRedirection(directory) || HasUnexpectedPortableExecutable(directory))
             return false;
 #ifndef _DEBUG
@@ -758,7 +758,7 @@ namespace
         // startup chain, while the installer-protected directory and module allow-list prevent
         // app-local code from being added or replaced during startup.
         const wchar_t* requiredManagedFiles[] = {
-            L"ProxiFyreUI.Managed.dll", L"ProxiFyre.Configuration.dll", L"Newtonsoft.Json.dll"
+            L"CodexProxy.Managed.dll", L"ProxiFyre.Configuration.dll", L"Newtonsoft.Json.dll"
         };
         for (const auto name : requiredManagedFiles)
         {
@@ -766,11 +766,11 @@ namespace
             HANDLE handle = INVALID_HANDLE_VALUE;
             if (!leases.Open(path, handle, failureReason))
                 return false;
-            if (wcscmp(name, L"ProxiFyreUI.Managed.dll") == 0)
+            if (wcscmp(name, L"CodexProxy.Managed.dll") == 0)
                 managedAssembly = path;
         }
 
-        const std::wstring configuration = JoinPath(directory, L"ProxiFyreUI.exe.config");
+        const std::wstring configuration = JoinPath(directory, L"CodexProxy.exe.config");
         HANDLE configurationHandle = INVALID_HANDLE_VALUE;
         if (!leases.Open(configuration, configurationHandle, failureReason))
             return false;
@@ -938,7 +938,7 @@ namespace
         std::wstring message =
             L"The CLR started, but the ProxiFyre UI reported a managed startup failure.\r\n\r\nManaged result: ";
         message += resultText;
-        message += L"\r\n\r\nReview ProxiFyreUI.startup.log in the installation directory if it was created.";
+        message += L"\r\n\r\nReview CodexProxy.startup.log in the installation directory if it was created.";
         ShowFailure(message.c_str());
     }
 }

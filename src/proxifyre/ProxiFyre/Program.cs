@@ -198,7 +198,7 @@ namespace ProxiFyre
             if (!File.Exists(configFilePath))
             {
                 var message = $"Configuration file not found: '{configFilePath}'. " +
-                              "Create an app-config.json next to ProxiFyre.exe before starting the service.";
+                              "Create an app-config.json next to CodexProxy.Service.exe before starting the service.";
                 LoggerInstance.Error(message);
                 throw new InvalidOperationException(message);
             }
@@ -502,8 +502,8 @@ namespace ProxiFyre
 
                         x.RunAsLocalSystem();
 
-                        x.SetDescription("ProxiFyre - SOCKS5 ProxiFyre Service");
-                        x.SetDisplayName("ProxiFyre Service");
+                        x.SetDescription("Codex Proxy - Codex SOCKS5 Service");
+                        x.SetDisplayName("Codex Proxy Service");
                         x.SetServiceName(ProxiFyrePaths.ServiceName);
                         x.DependsOn(ProxiFyrePaths.WindowsPacketFilterServiceName);
 

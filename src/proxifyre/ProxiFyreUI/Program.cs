@@ -12,7 +12,7 @@ using System.Windows.Forms;
 namespace ProxiFyreUI
 {
     /// <summary>
-    /// Native ProxiFyreUI.exe invokes this method only after validating and locking the managed
+    /// Native CodexProxy.exe invokes this method only after validating and locking the managed
     /// payload, sanitizing CLR-control environment variables, and starting .NET Framework 4.
     /// </summary>
     public static class ManagedEntryPoint
@@ -47,7 +47,7 @@ namespace ProxiFyreUI
                 if (string.IsNullOrWhiteSpace(assemblyDirectory))
                     return;
 
-                var logPath = Path.Combine(assemblyDirectory, "ProxiFyreUI.startup.log");
+                var logPath = Path.Combine(assemblyDirectory, "CodexProxy.startup.log");
                 using (var writer = new StreamWriter(logPath, false,
                     new UTF8Encoding(false)))
                 {

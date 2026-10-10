@@ -174,11 +174,11 @@
         <Component Id="EngineComponent" Guid="*" Feature="CoreFeature">
           <File
               Id="ProxiFyreEngineFile"
-              Source="!(bindpath.Payload)\ProxiFyre.exe"
+              Source="!(bindpath.Payload)\CodexProxy.Service.exe"
               KeyPath="yes" />
           <ServiceInstall
               Id="ProxiFyreServiceInstall"
-              Name="ProxiFyreService"
+              Name="CodexProxyService"
               DisplayName="ProxiFyre Service"
               Description="Routes selected Windows applications through configured SOCKS5 proxies."
               Type="ownProcess"
@@ -191,7 +191,7 @@
           </ServiceInstall>
           <ServiceControl
               Id="ProxiFyreServiceControl"
-              Name="ProxiFyreService"
+              Name="CodexProxyService"
               Stop="both"
               Remove="uninstall"
               Wait="yes" />
@@ -220,14 +220,14 @@
         </Component>
 
         <Component Id="EngineConfigurationComponent" Guid="*" Feature="CoreFeature">
-          <File Id="ProxiFyreEngineConfigurationFile" Source="!(bindpath.Payload)\ProxiFyre.exe.config" KeyPath="yes" />
+          <File Id="ProxiFyreEngineConfigurationFile" Source="!(bindpath.Payload)\CodexProxy.Service.exe.config" KeyPath="yes" />
         </Component>
         <Component Id="UiLauncherComponent" Guid="$(UiLauncherComponentGuid)" Feature="CoreFeature">
-          <File Id="ProxiFyreUiFile" Source="!(bindpath.Payload)\ProxiFyreUI.exe" KeyPath="yes" />
-          <File Id="ProxiFyreUiConfigurationFile" Source="!(bindpath.Payload)\ProxiFyreUI.exe.config" CompanionFile="ProxiFyreUiFile" />
+          <File Id="ProxiFyreUiFile" Source="!(bindpath.Payload)\CodexProxy.exe" KeyPath="yes" />
+          <File Id="ProxiFyreUiConfigurationFile" Source="!(bindpath.Payload)\CodexProxy.exe.config" CompanionFile="ProxiFyreUiFile" />
         </Component>
         <Component Id="ManagedUiComponent" Guid="*" Feature="CoreFeature">
-          <File Id="ProxiFyreManagedUiFile" Source="!(bindpath.Payload)\ProxiFyreUI.Managed.dll" KeyPath="yes" />
+          <File Id="ProxiFyreManagedUiFile" Source="!(bindpath.Payload)\CodexProxy.Managed.dll" KeyPath="yes" />
         </Component>
         <Component Id="ConfigurationLibraryComponent" Guid="*" Feature="CoreFeature">
           <File Id="ProxiFyreConfigurationLibraryFile" Source="!(bindpath.Payload)\ProxiFyre.Configuration.dll" KeyPath="yes" />
@@ -262,7 +262,7 @@
             Id="ProxiFyreStartMenuShortcut"
             Name="ProxiFyre"
             Description="Configure and manage ProxiFyre"
-            Target="[ProxiFyreInstallFolder]ProxiFyreUI.exe"
+            Target="[ProxiFyreInstallFolder]CodexProxy.exe"
             WorkingDirectory="ProxiFyreInstallFolder"
             Advertise="no"
             Icon="ProxiFyre.ico"
@@ -286,7 +286,7 @@
             Id="ProxiFyreDesktopShortcut"
             Name="ProxiFyre"
             Description="Configure and manage ProxiFyre"
-            Target="[ProxiFyreInstallFolder]ProxiFyreUI.exe"
+            Target="[ProxiFyreInstallFolder]CodexProxy.exe"
             WorkingDirectory="ProxiFyreInstallFolder"
             Advertise="no"
             Icon="ProxiFyre.ico"

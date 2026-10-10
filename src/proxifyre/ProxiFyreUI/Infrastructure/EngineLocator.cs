@@ -133,7 +133,7 @@ namespace ProxiFyreUI.Infrastructure
             }
 
             return new EngineLocation(null, EngineLocationSource.None,
-                "ProxiFyre.exe was not found. Select the engine executable to continue.");
+                "CodexProxy.Service.exe was not found. Select the engine executable to continue.");
         }
 
         public EngineLocation ValidateUserSelection(string path)
@@ -150,7 +150,7 @@ namespace ProxiFyreUI.Infrastructure
 
             if (!_engineValidator(fullPath))
                 return new EngineLocation(fullPath, EngineLocationSource.UserSelection,
-                    "Select an existing ProxiFyre.exe with a valid ProxiFyre engine identity.");
+                    "Select an existing CodexProxy.Service.exe with a valid ProxiFyre engine identity.");
 
             return new EngineLocation(fullPath, EngineLocationSource.UserSelection);
         }
@@ -175,7 +175,7 @@ namespace ProxiFyreUI.Infrastructure
             if (!string.IsNullOrWhiteSpace(locationFailure))
             {
                 return new EngineLocation(validated.Path, EngineLocationSource.UserSelection,
-                    "This ProxiFyre.exe cannot be used for a privileged service " +
+                    "This CodexProxy.Service.exe cannot be used for a privileged service " +
                     "uninstall because it is not in a protected per-machine location. " +
                     locationFailure);
             }
@@ -216,7 +216,7 @@ namespace ProxiFyreUI.Infrastructure
             }
 
             return new EngineLocation(null, EngineLocationSource.None,
-                "No valid ProxiFyre.exe in a protected per-machine location is available to " +
+                "No valid CodexProxy.Service.exe in a protected per-machine location is available to " +
                 "run the privileged service uninstall command.");
         }
 
@@ -372,7 +372,7 @@ namespace ProxiFyreUI.Infrastructure
                     return true;
             }
 
-            if (string.Equals(fileName, "ProxiFyre.exe.config",
+            if (string.Equals(fileName, "CodexProxy.Service.exe.config",
                     StringComparison.OrdinalIgnoreCase))
             {
 #if DEBUG
@@ -407,7 +407,7 @@ namespace ProxiFyreUI.Infrastructure
                 // project as a second identity check before launching install/uninstall.
                 if (!string.Equals(info.OriginalFilename, ProxiFyrePaths.EngineExecutableName,
                         StringComparison.OrdinalIgnoreCase) ||
-                    !string.Equals(info.ProductName, "ProxiFyre", StringComparison.Ordinal))
+                    !string.Equals(info.ProductName, "Codex Proxy", StringComparison.Ordinal))
                     return false;
             }
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException ||

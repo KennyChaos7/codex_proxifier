@@ -32,7 +32,7 @@ namespace ProxiFyre.Tests
         public void ProductionLocatorPrefersInstalledServiceAndDiscardsFixedArguments()
         {
             var serviceEngine = CreatePlaceholder("service", ProxiFyrePaths.EngineExecutableName);
-            var uiExecutable = CreatePlaceholder("ui", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("ui", "CodexProxy.exe");
             CreatePlaceholder("ui", ProxiFyrePaths.EngineExecutableName);
             var savedEngine = CreatePlaceholder("saved", ProxiFyrePaths.EngineExecutableName);
             var locator = CreateLocator(
@@ -48,7 +48,7 @@ namespace ProxiFyre.Tests
         [Test]
         public void ProductionLocatorUsesEngineBesideUiBeforeSavedSelection()
         {
-            var uiExecutable = CreatePlaceholder("portable", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("portable", "CodexProxy.exe");
             var besideUi = CreatePlaceholder("portable", ProxiFyrePaths.EngineExecutableName);
             var savedEngine = CreatePlaceholder("saved", ProxiFyrePaths.EngineExecutableName);
             var locator = CreateLocator(() => null, uiExecutable);
@@ -62,7 +62,7 @@ namespace ProxiFyre.Tests
         [Test]
         public void ProductionLocatorSupportsGuiInstalledSeparatelyFromSavedEngine()
         {
-            var uiExecutable = CreatePlaceholder("ui-only", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("ui-only", "CodexProxy.exe");
             var savedEngine = CreatePlaceholder("separate-engine", ProxiFyrePaths.EngineExecutableName);
             var locator = CreateLocator(() => null, uiExecutable);
 
@@ -77,7 +77,7 @@ namespace ProxiFyre.Tests
         public void InvalidInstalledServiceIsReportedWithoutFallingBackToAnotherEngine()
         {
             var invalidService = CreatePlaceholder("service", ProxiFyrePaths.EngineExecutableName);
-            var uiExecutable = CreatePlaceholder("portable", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("portable", "CodexProxy.exe");
             CreatePlaceholder("portable", ProxiFyrePaths.EngineExecutableName);
             var locator = new EngineLocator(
                 () => "\"" + invalidService + "\" run",
@@ -95,7 +95,7 @@ namespace ProxiFyre.Tests
         [Test]
         public void ServiceRegistrationAccessFailureDoesNotFallBackToAnotherEngine()
         {
-            var uiExecutable = CreatePlaceholder("portable", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("portable", "CodexProxy.exe");
             CreatePlaceholder("portable", ProxiFyrePaths.EngineExecutableName);
             var locator = new EngineLocator(
                 () => throw new UnauthorizedAccessException("registry denied"),
@@ -117,7 +117,7 @@ namespace ProxiFyre.Tests
         [Test]
         public void InvalidExistingServiceImagePathDoesNotFallBackToAnotherEngine()
         {
-            var uiExecutable = CreatePlaceholder("portable", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("portable", "CodexProxy.exe");
             CreatePlaceholder("portable", ProxiFyrePaths.EngineExecutableName);
             var locator = new EngineLocator(
                 () => throw new InvalidDataException("ImagePath is missing"),
@@ -147,7 +147,7 @@ namespace ProxiFyre.Tests
         [Test]
         public void ExistingServiceAcceptsANonEmptyStringImagePath()
         {
-            const string imagePath = "\"C:\\Program Files\\ProxiFyre\\ProxiFyre.exe\" install";
+            const string imagePath = "\"C:\\Program Files\\ProxiFyre\\CodexProxy.Service.exe\" install";
 
             Assert.That(EngineLocator.RequireValidServiceImagePathValue(imagePath),
                 Is.EqualTo(imagePath));
@@ -158,7 +158,7 @@ namespace ProxiFyre.Tests
         {
             var registeredEngine = CreatePlaceholder("service", ProxiFyrePaths.EngineExecutableName);
             var otherEngine = CreatePlaceholder("other", ProxiFyrePaths.EngineExecutableName);
-            var uiExecutable = CreatePlaceholder("ui", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("ui", "CodexProxy.exe");
             var accepted = new EngineLocator(() => "\"" + registeredEngine + "\" run",
                 path => string.Equals(path, registeredEngine, StringComparison.OrdinalIgnoreCase),
                 uiExecutable);
@@ -215,13 +215,13 @@ namespace ProxiFyre.Tests
 
             Assert.That(names, Is.EqualTo(new[]
             {
-                "ProxiFyre.exe",
+                "CodexProxy.Service.exe",
                 "ProxiFyre.Configuration.dll",
                 "socksify.dll",
                 "Newtonsoft.Json.dll",
                 "NLog.dll",
                 "Topshelf.dll",
-                "ProxiFyre.exe.config",
+                "CodexProxy.Service.exe.config",
                 "NLog.config"
             }));
         }
@@ -229,17 +229,17 @@ namespace ProxiFyre.Tests
         [Test]
         public void UiStartupPayloadIncludesItsTransitiveJsonDependency()
         {
-            var uiPath = Path.Combine(_directory, "ProxiFyreUI.Managed.dll");
+            var uiPath = Path.Combine(_directory, "CodexProxy.Managed.dll");
 
             var names = Array.ConvertAll(UiStartupPayload.GetStartupPayloadPaths(uiPath),
                 Path.GetFileName);
 
             Assert.That(names, Is.EqualTo(new[]
             {
-                "ProxiFyreUI.Managed.dll",
+                "CodexProxy.Managed.dll",
                 "ProxiFyre.Configuration.dll",
                 "Newtonsoft.Json.dll",
-                "ProxiFyreUI.exe.config"
+                "CodexProxy.exe.config"
             }));
         }
 
@@ -264,7 +264,7 @@ namespace ProxiFyre.Tests
         public void BuiltUiConfigurationMatchesTheRuntimeIntegrityPin()
         {
             var path = Path.Combine(Path.GetDirectoryName(typeof(EngineLocator).Assembly.Location),
-                "ProxiFyreUI.exe.config");
+                "CodexProxy.exe.config");
 
             Assert.That(File.Exists(path), Is.True);
             Assert.That(UiStartupPayload.IsTrustedUiPayloadFile(path), Is.True);
@@ -292,10 +292,10 @@ namespace ProxiFyre.Tests
         public void UninstallFallbackPrefersCurrentValidatedEngine()
         {
             var current = CreatePlaceholder("current", ProxiFyrePaths.EngineExecutableName);
-            var uiExecutable = CreatePlaceholder("portable", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("portable", "CodexProxy.exe");
             CreatePlaceholder("portable", ProxiFyrePaths.EngineExecutableName);
             var saved = CreatePlaceholder("saved", ProxiFyrePaths.EngineExecutableName);
-            var locator = CreateLocator(() => @"C:\missing\ProxiFyre.exe", uiExecutable);
+            var locator = CreateLocator(() => @"C:\missing\CodexProxy.Service.exe", uiExecutable);
 
             var result = locator.ResolveProtectedUninstallFallback(
                 new UiSettings { SelectedEnginePath = saved }, current);
@@ -311,13 +311,13 @@ namespace ProxiFyre.Tests
         [Test]
         public void UninstallFallbackUsesAdjacentEngineBeforeSavedSelection()
         {
-            var uiExecutable = CreatePlaceholder("portable", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("portable", "CodexProxy.exe");
             var adjacent = CreatePlaceholder("portable", ProxiFyrePaths.EngineExecutableName);
             var saved = CreatePlaceholder("saved", ProxiFyrePaths.EngineExecutableName);
-            var locator = CreateLocator(() => @"C:\missing\ProxiFyre.exe", uiExecutable);
+            var locator = CreateLocator(() => @"C:\missing\CodexProxy.Service.exe", uiExecutable);
 
             var result = locator.ResolveProtectedUninstallFallback(
-                new UiSettings { SelectedEnginePath = saved }, @"C:\also-missing\ProxiFyre.exe");
+                new UiSettings { SelectedEnginePath = saved }, @"C:\also-missing\CodexProxy.Service.exe");
 
             Assert.Multiple(() =>
             {
@@ -330,9 +330,9 @@ namespace ProxiFyre.Tests
         [Test]
         public void UninstallFallbackUsesSavedSelectionWhenOtherCandidatesAreUnavailable()
         {
-            var uiExecutable = CreatePlaceholder("ui-only", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("ui-only", "CodexProxy.exe");
             var saved = CreatePlaceholder("saved", ProxiFyrePaths.EngineExecutableName);
-            var locator = CreateLocator(() => @"C:\missing\ProxiFyre.exe", uiExecutable);
+            var locator = CreateLocator(() => @"C:\missing\CodexProxy.Service.exe", uiExecutable);
 
             var result = locator.ResolveProtectedUninstallFallback(
                 new UiSettings { SelectedEnginePath = saved }, null);
@@ -344,9 +344,9 @@ namespace ProxiFyre.Tests
         [Test]
         public void UninstallFallbackDoesNotMakeNormalBrokenRegistrationResolutionPermissive()
         {
-            var uiExecutable = CreatePlaceholder("portable", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("portable", "CodexProxy.exe");
             var adjacent = CreatePlaceholder("portable", ProxiFyrePaths.EngineExecutableName);
-            var locator = CreateLocator(() => @"C:\missing\ProxiFyre.exe", uiExecutable);
+            var locator = CreateLocator(() => @"C:\missing\CodexProxy.Service.exe", uiExecutable);
 
             var normal = locator.Resolve(new UiSettings());
             var uninstallFallback = locator.ResolveProtectedUninstallFallback(new UiSettings(), null);
@@ -363,8 +363,8 @@ namespace ProxiFyre.Tests
         [Test]
         public void UninstallFallbackReportsWhenBrowsingIsRequired()
         {
-            var uiExecutable = CreatePlaceholder("ui-only", "ProxiFyreUI.exe");
-            var locator = CreateLocator(() => @"C:\missing\ProxiFyre.exe", uiExecutable);
+            var uiExecutable = CreatePlaceholder("ui-only", "CodexProxy.exe");
+            var locator = CreateLocator(() => @"C:\missing\CodexProxy.Service.exe", uiExecutable);
 
             var result = locator.ResolveProtectedUninstallFallback(new UiSettings(), null);
 
@@ -372,7 +372,7 @@ namespace ProxiFyre.Tests
             {
                 Assert.That(result.IsResolved, Is.False);
                 Assert.That(result.Source, Is.EqualTo(UiEngineLocationSource.None));
-                Assert.That(result.Error, Does.Contain("valid ProxiFyre.exe"));
+                Assert.That(result.Error, Does.Contain("valid CodexProxy.Service.exe"));
             });
         }
 
@@ -380,9 +380,9 @@ namespace ProxiFyre.Tests
         public void UninstallFallbackRejectsEngineOutsideProtectedLocation()
         {
             var current = CreatePlaceholder("current", ProxiFyrePaths.EngineExecutableName);
-            var uiExecutable = CreatePlaceholder("ui-only", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("ui-only", "CodexProxy.exe");
             var locator = new EngineLocator(
-                () => @"C:\missing\ProxiFyre.exe",
+                () => @"C:\missing\CodexProxy.Service.exe",
                 path => File.Exists(path) && ProxiFyrePaths.IsEngineExecutable(path),
                 uiExecutable,
                 path => "The directory grants standard users write access.");
@@ -400,7 +400,7 @@ namespace ProxiFyre.Tests
         public void ProtectedUninstallSelectionReportsLocationPolicyReason()
         {
             var engine = CreatePlaceholder("selected", ProxiFyrePaths.EngineExecutableName);
-            var uiExecutable = CreatePlaceholder("ui-only", "ProxiFyreUI.exe");
+            var uiExecutable = CreatePlaceholder("ui-only", "CodexProxy.exe");
             var locator = new EngineLocator(
                 () => null,
                 path => File.Exists(path) && ProxiFyrePaths.IsEngineExecutable(path),

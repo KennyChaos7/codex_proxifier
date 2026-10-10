@@ -83,11 +83,11 @@ if (($bootstrapperExtensionItem.Attributes -band [IO.FileAttributes]::ReparsePoi
 }
 
 $runtimeFiles = @(
-    'ProxiFyre.exe',
-    'ProxiFyre.exe.config',
-    'ProxiFyreUI.exe',
-    'ProxiFyreUI.exe.config',
-    'ProxiFyreUI.Managed.dll',
+    'CodexProxy.Service.exe',
+    'CodexProxy.Service.exe.config',
+    'CodexProxy.exe',
+    'CodexProxy.exe.config',
+    'CodexProxy.Managed.dll',
     'ProxiFyre.Configuration.dll',
     'socksify.dll',
     'Newtonsoft.Json.dll',
@@ -167,9 +167,9 @@ function Assert-ReleaseVersion {
 }
 
 foreach ($architectureFile in @(
-        'ProxiFyre.exe',
-        'ProxiFyreUI.exe',
-        'ProxiFyreUI.Managed.dll',
+        'CodexProxy.Service.exe',
+        'CodexProxy.exe',
+        'CodexProxy.Managed.dll',
         'ProxiFyre.Configuration.dll',
         'socksify.dll')) {
     $architecturePath = Join-Path $payloadPath $architectureFile
@@ -343,9 +343,9 @@ try {
             $false)
     }
     $firstPartyModules = @(
-        'ProxiFyre.exe',
-        'ProxiFyreUI.exe',
-        'ProxiFyreUI.Managed.dll',
+        'CodexProxy.Service.exe',
+        'CodexProxy.exe',
+        'CodexProxy.Managed.dll',
         'ProxiFyre.Configuration.dll',
         'socksify.dll'
     ) | ForEach-Object { Join-Path $stagedPayload $_ }

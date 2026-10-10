@@ -179,7 +179,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 ### 05：程序身份与默认管理员启动
 
-- [ ] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
+- [x] **完成本步骤的交付物与过程记录（对应测试在最后执行）。**
 
 **Files:** Directory.Build.props；ProxiFyre/ProxiFyre.csproj、Properties/AssemblyInfo.cs、Program.cs；ProxiFyreUI/ProxiFyreUI.csproj、Properties/AssemblyInfo.cs、app.manifest、Program.cs；ProxiFyreUILauncher/Program.cpp、Resources.rc、ProxiFyreUILauncher.vcxproj；ProxiFyre.Configuration/PathUtilities.cs；GUI Infrastructure/EngineLocator.cs、PayloadIntegrity.cs、SingleInstanceCoordinator.cs、UiSettings.cs；实际受影响测试。
 **Produces:** CodexProxy.exe、CodexProxy.Managed.dll、CodexProxy.Service.exe；默认 UAC 启动。
@@ -389,6 +389,7 @@ msbuild socksify.sln -t:Build -v:minimal -p:Configuration=Debug -p:Platform=x64 
 
 **Expected:** 使用文档与已验证行为一致，整个独立产品可交付；有未完成关键步骤时不宣称最终完成。
 **Commit:** docs: 完成 Codex Proxy 使用文档与验收记录
+
 
 
 

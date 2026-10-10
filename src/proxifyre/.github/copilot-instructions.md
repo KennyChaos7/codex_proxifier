@@ -76,36 +76,36 @@ Windows Packet Filter and the architecture-matched Visual C++ runtime are target
 
 ### Prerequisites for Running
 - Windows Packet Filter must be installed and running
-- Windows Firewall may block ProxiFyre - add inbound rule for `ProxiFyre.exe` if needed
+- Windows Firewall may block ProxiFyre - add inbound rule for `CodexProxy.Service.exe` if needed
 - Requires administrative privileges
 
 ### Running as Console Application
-1. Create `app-config.json` in the same directory as `ProxiFyre.exe`
-2. Run: `ProxiFyre.exe`
+1. Create `app-config.json` in the same directory as `CodexProxy.Service.exe`
+2. Run: `CodexProxy.Service.exe`
 3. **MANUAL VALIDATION**: Always test functionality by:
    - Creating a valid `app-config.json` with test SOCKS5 proxy settings
-   - Running the application and monitoring logs in the `.\logs` directory beside `ProxiFyre.exe`
+   - Running the application and monitoring logs in the `.\logs` directory beside `CodexProxy.Service.exe`
    - Verifying network traffic is routed through proxy using network monitoring tools
 
 ### Running as Windows Service
 ```cmd
 # Install service (run as Administrator)
-ProxiFyre.exe install
+CodexProxy.Service.exe install
 
 # Start service
-ProxiFyre.exe start
+CodexProxy.Service.exe start
 
 # Stop service  
-ProxiFyre.exe stop
+CodexProxy.Service.exe stop
 
 # Uninstall service
-ProxiFyre.exe uninstall
+CodexProxy.Service.exe uninstall
 ```
 
 ## Configuration
 
 ### Example app-config.json
-Create this file in the same directory as `ProxiFyre.exe`:
+Create this file in the same directory as `CodexProxy.Service.exe`:
 
 ```json
 {
@@ -139,11 +139,11 @@ Create this file in the same directory as `ProxiFyre.exe`:
 ### Build Validation (Windows Only)
 - **NEVER CANCEL**: Wait for all builds to complete (5-15 minutes typical)
 - Check build output in `bin\exe\{Platform}\{Configuration}\` directory
-- Verify `ProxiFyre.exe` exists and required DLLs are present
+- Verify `CodexProxy.Service.exe` exists and required DLLs are present
 
 ### Runtime Validation (Windows Only)
 - Always test with a working SOCKS5 proxy server
-- Monitor application logs in the `.\logs` directory beside `ProxiFyre.exe`
+- Monitor application logs in the `.\logs` directory beside `CodexProxy.Service.exe`
 - Test both TCP and UDP traffic routing if configured
 - Verify excluded applications bypass the proxy
 - Use network monitoring tools to confirm proxy routing
@@ -186,7 +186,7 @@ Create this file in the same directory as `ProxiFyre.exe`:
    - The service/console executable remains the only networking engine
 
 6. **ProxiFyreUILauncher** (`./ProxiFyreUILauncher/`):
-   - Statically linked native integrity host that starts `ProxiFyreUI.Managed.dll`
+   - Statically linked native integrity host that starts `CodexProxy.Managed.dll`
    - Enforces the app-local module allowlist, fixed CLR configuration, secure DLL search, and payload leases without Authenticode
 
 7. **ProxiFyre.Tests** (`./ProxiFyre.Tests/`):
@@ -278,6 +278,6 @@ find . -name "*.cpp" -o -name "*.h"
 ### Build Matrix
 - Platforms: x86, x64, ARM64
 - Configuration: Release only for CI builds
-- Runtime output: `bin\exe\{Platform}\Release\` contains `ProxiFyre.exe`, `ProxiFyreUI.exe`, `socksify.dll`, `ProxiFyre.Configuration.dll`, and their managed dependencies
+- Runtime output: `bin\exe\{Platform}\Release\` contains `CodexProxy.Service.exe`, `CodexProxy.exe`, `socksify.dll`, `ProxiFyre.Configuration.dll`, and their managed dependencies
 - Test output: `bin\tests\{Platform}\Release\ProxiFyre.Tests.dll`
 - Installer output: `bin\installer\{Platform}\Release\` contains the standalone MSI, online setup bundle, and checksum files

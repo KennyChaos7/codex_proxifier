@@ -68,7 +68,7 @@ namespace ProxiFyreUI.Infrastructure
         public WorkspaceLoadResult Load(EngineLocation engineLocation)
         {
             if (engineLocation == null || !engineLocation.IsResolved)
-                throw new InvalidOperationException("Resolve ProxiFyre.exe before loading its configuration.");
+                throw new InvalidOperationException("Resolve CodexProxy.Service.exe before loading its configuration.");
 
             // Build the complete replacement state before touching the active workspace. A
             // malformed or inaccessible configuration at a newly selected engine must not

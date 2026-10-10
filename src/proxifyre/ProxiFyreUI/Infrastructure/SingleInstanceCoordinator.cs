@@ -72,7 +72,7 @@ namespace ProxiFyreUI.Infrastructure
             if (sessionId < 0)
                 throw new ArgumentOutOfRangeException(nameof(sessionId));
             return string.Format(
-                @"Local\ProxiFyreUI.{0}.{1}.Session-{2}",
+                @"Local\CodexProxy.{0}.{1}.Session-{2}",
                 ApplicationId, user.Value, sessionId);
         }
 

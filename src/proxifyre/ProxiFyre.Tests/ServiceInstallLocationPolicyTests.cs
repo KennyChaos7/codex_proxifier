@@ -101,8 +101,8 @@ namespace ProxiFyre.Tests
             });
         }
 
-        [TestCase("ProxiFyre.exe", true)]
-        [TestCase("ProxiFyreUI.Managed.dll", true)]
+        [TestCase("CodexProxy.Service.exe", true)]
+        [TestCase("CodexProxy.Managed.dll", true)]
         [TestCase("mscoree.dll", false)]
         [TestCase("helper.exe", false)]
         public void PortableExecutableAllowListIsExact(string fileName, bool expected)

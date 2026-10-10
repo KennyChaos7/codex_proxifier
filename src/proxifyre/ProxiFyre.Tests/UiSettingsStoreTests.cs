@@ -32,7 +32,7 @@ namespace ProxiFyre.Tests
             var store = new UiSettingsStore(_path);
             store.Save(new UiSettings
             {
-                SelectedEnginePath = @"C:\Program Files\ProxiFyre\ProxiFyre.exe",
+                SelectedEnginePath = @"C:\Program Files\ProxiFyre\CodexProxy.Service.exe",
                 MinimizeToTray = false,
                 FollowLogs = false
             });
@@ -43,7 +43,7 @@ namespace ProxiFyre.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(loaded.SelectedEnginePath,
-                    Is.EqualTo(@"C:\Program Files\ProxiFyre\ProxiFyre.exe"));
+                    Is.EqualTo(@"C:\Program Files\ProxiFyre\CodexProxy.Service.exe"));
                 Assert.That(loaded.MinimizeToTray, Is.False);
                 Assert.That(loaded.FollowLogs, Is.False);
                 Assert.That(json, Does.Contain("\"selectedEnginePath\""));

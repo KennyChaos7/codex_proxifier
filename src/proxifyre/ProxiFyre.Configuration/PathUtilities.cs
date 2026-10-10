@@ -6,12 +6,12 @@ namespace ProxiFyre.Configuration
 {
     public static class ProxiFyrePaths
     {
-        public const string ServiceName = "ProxiFyreService";
+        public const string ServiceName = "CodexProxyService";
         public const string WindowsPacketFilterServiceName = "NDISRD";
-        public const string EngineExecutableName = "ProxiFyre.exe";
+        public const string EngineExecutableName = "CodexProxy.Service.exe";
         public const string ConfigurationFileName = "app-config.json";
         public const string SampleConfigurationFileName = "app-config.sample.json";
-        public const string UiSettingsDirectoryName = "ProxiFyreUI";
+        public const string UiSettingsDirectoryName = "CodexProxy";
         public const string UiSettingsFileName = "ui-settings.json";
         public const string LogDirectoryName = "logs";
 

@@ -7,7 +7,7 @@
     <ProjectGuid>{7790E7D3-66F9-4E93-A9DB-967DDCECC76D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>ProxiFyreUI</RootNamespace>
-    <AssemblyName>ProxiFyreUI.Managed</AssemblyName>
+    <AssemblyName>CodexProxy.Managed</AssemblyName>
     <ApplicationIcon>..\assets\ProxiFyre.ico</ApplicationIcon>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -83,7 +83,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ProxiFyreUI.exe.config">
+    <Content Include="CodexProxy.exe.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="..\assets\ProxiFyre.ico">

@@ -207,7 +207,7 @@ namespace ProxiFyre.Tests
                 Assert.Multiple(() =>
                 {
                     Assert.Throws<ArgumentException>(() => controller.StartAsync(
-                        "ProxiFyre.exe", () => true, TimeSpan.FromSeconds(1),
+                        "CodexProxy.Service.exe", () => true, TimeSpan.FromSeconds(1),
                         default(System.Threading.CancellationToken)));
                     Assert.Throws<ArgumentNullException>(() => controller.RestartAsync(
                         validShape, null, TimeSpan.FromSeconds(1),
@@ -287,7 +287,7 @@ namespace ProxiFyre.Tests
             var payloadDirectory = Path.Combine(root, "payload");
             var renamedDirectory = Path.Combine(root, "renamed");
             Directory.CreateDirectory(payloadDirectory);
-            var path = Path.Combine(payloadDirectory, "ProxiFyre.exe");
+            var path = Path.Combine(payloadDirectory, "CodexProxy.Service.exe");
             File.WriteAllText(path, "trusted bytes");
             try
             {
@@ -299,7 +299,7 @@ namespace ProxiFyre.Tests
                 }
 
                 Assert.DoesNotThrow(() => Directory.Move(payloadDirectory, renamedDirectory));
-                Assert.That(File.ReadAllText(Path.Combine(renamedDirectory, "ProxiFyre.exe")),
+                Assert.That(File.ReadAllText(Path.Combine(renamedDirectory, "CodexProxy.Service.exe")),
                     Is.EqualTo("trusted bytes"));
             }
             finally
@@ -330,7 +330,7 @@ namespace ProxiFyre.Tests
             var directory = Path.Combine(Path.GetTempPath(),
                 "ProxiFyre.VolumeAlias." + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(directory);
-            var payloadPath = Path.Combine(directory, "ProxiFyre.exe");
+            var payloadPath = Path.Combine(directory, "CodexProxy.Service.exe");
             File.WriteAllText(payloadPath, "trusted bytes");
 
             var aliasRoot = aliasDeviceName + Path.DirectorySeparatorChar;

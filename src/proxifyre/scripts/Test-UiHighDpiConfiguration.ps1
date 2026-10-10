@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
-$configurationPath = Join-Path $repositoryRoot 'ProxiFyreUI\ProxiFyreUI.exe.config'
+$configurationPath = Join-Path $repositoryRoot 'ProxiFyreUI\CodexProxy.exe.config'
 $manifestPath = Join-Path $repositoryRoot 'ProxiFyreUI\app.manifest'
 
 [xml]$configuration = [IO.File]::ReadAllText($configurationPath)

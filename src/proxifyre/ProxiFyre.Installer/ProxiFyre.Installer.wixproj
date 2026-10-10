@@ -53,7 +53,7 @@
            Text="Architecture-specific component identities must be supplied by scripts/Build-Installer.ps1." />
     <Error Condition="'$(LicenseRtfPath)' == '' or !Exists('$(LicenseRtfPath)')"
            Text="LicenseRtfPath must identify the generated full AGPL-3.0 license." />
-    <Error Condition="!Exists('$(PayloadDirectory)\ProxiFyre.exe') or !Exists('$(PayloadDirectory)\ProxiFyreUI.exe') or !Exists('$(PayloadDirectory)\socksify.dll')"
+    <Error Condition="!Exists('$(PayloadDirectory)\CodexProxy.Service.exe') or !Exists('$(PayloadDirectory)\CodexProxy.exe') or !Exists('$(PayloadDirectory)\socksify.dll')"
            Text="The validated payload is incomplete." />
   </Target>
 </Project>

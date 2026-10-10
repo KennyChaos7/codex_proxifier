@@ -108,7 +108,7 @@ namespace ProxiFyreUI.Forms
             else
             {
                 configurationStateValueLabel.Text = "Engine not resolved";
-                changesStateValueLabel.Text = "Select ProxiFyre.exe";
+                changesStateValueLabel.Text = "Select CodexProxy.Service.exe";
             }
 
             await RefreshServiceStatusAsync();
@@ -642,7 +642,7 @@ namespace ProxiFyreUI.Forms
             }
             if (_engineLocation == null || !_engineLocation.IsResolved)
             {
-                MessageBox.Show(this, "Resolve a valid ProxiFyre.exe before installing the service.",
+                MessageBox.Show(this, "Resolve a valid CodexProxy.Service.exe before installing the service.",
                     "Engine not resolved", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -1792,7 +1792,7 @@ namespace ProxiFyreUI.Forms
         {
             if (_workspace.Configuration != null)
                 return true;
-            MessageBox.Show(this, "Resolve ProxiFyre.exe and load a configuration first.",
+            MessageBox.Show(this, "Resolve CodexProxy.Service.exe and load a configuration first.",
                 "Configuration unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return false;
         }

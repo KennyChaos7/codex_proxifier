@@ -1,25 +1,25 @@
 # ProxiFyre GUI
 
-`ProxiFyreUI.exe` is the native host for ProxiFyre's managed Windows Forms application. Together they edit the engine configuration, control `ProxiFyreService`, and follow the engine log files. The UI is deliberately not a packet-processing host: `ProxiFyre.exe` and the existing `socksify.dll` C++/CLI component remain the networking engine.
+`CodexProxy.exe` is the native host for ProxiFyre's managed Windows Forms application. Together they edit the engine configuration, control `ProxiFyreService`, and follow the engine log files. The UI is deliberately not a packet-processing host: `CodexProxy.Service.exe` and the existing `socksify.dll` C++/CLI component remain the networking engine.
 
 ## Architecture and trust boundaries
 
 The managed dependency graph is intentionally one-way:
 
 ```text
-ProxiFyre.exe --------------> ProxiFyre.Configuration.dll
+CodexProxy.Service.exe --------------> ProxiFyre.Configuration.dll
       |
       +---------------------> socksify.dll
 
-ProxiFyreUI.exe (native integrity/CLR host)
+CodexProxy.exe (native integrity/CLR host)
       |
-      +---------------------> ProxiFyreUI.Managed.dll
+      +---------------------> CodexProxy.Managed.dll
                                       |
                                       +--> ProxiFyre.Configuration.dll
                                       +--> Newtonsoft.Json.dll
 ```
 
-`ProxiFyre.Configuration` contains the JSON models, forward-compatible serialization, normalization, structured validation, fingerprints, and atomic file operations. It has no native dependency. The native `ProxiFyreUI.exe` host validates and leases the complete unsigned managed UI chain and verifies its exact CLR-configuration hash before starting .NET Framework; this prevents a mutable CLR configuration from running code before the managed integrity check. `ProxiFyreUI.Managed.dll` never references or loads `socksify.dll`; it controls the installed service through the Windows Service Control Manager and invokes only the resolved `ProxiFyre.exe` with a fixed `install` or `uninstall` argument.
+`ProxiFyre.Configuration` contains the JSON models, forward-compatible serialization, normalization, structured validation, fingerprints, and atomic file operations. It has no native dependency. The native `CodexProxy.exe` host validates and leases the complete unsigned managed UI chain and verifies its exact CLR-configuration hash before starting .NET Framework; this prevents a mutable CLR configuration from running code before the managed integrity check. `CodexProxy.Managed.dll` never references or loads `socksify.dll`; it controls the installed service through the Windows Service Control Manager and invokes only the resolved `CodexProxy.Service.exe` with a fixed `install` or `uninstall` argument.
 
 After payload validation and before constructing the first control, the managed UI verifies that .NET Framework WinForms can resolve its normal default font. If the legacy GDI+ generic-font path fails, it tries installed named Windows UI fonts and then asks GDI to realize the current Windows UI font as TrueType, selects it into a native device context, and creates the managed font directly from that context. This avoids GDI+'s unusable generic-family and `LOGFONT` reconstruction paths before controls such as `DataGridView` are created. Designer typography also uses guarded family construction: healthy systems retain Segoe UI/Consolas styling, while a damaged GDI+ family lookup falls back to the recovered process font.
 
@@ -32,11 +32,11 @@ The primary service controls include explicit install and uninstall actions. The
 The GUI resolves the engine in this order:
 
 1. The registered image path for `ProxiFyreService`, when installed.
-2. `ProxiFyre.exe` beside `ProxiFyreUI.exe`.
+2. `CodexProxy.Service.exe` beside `CodexProxy.exe`.
 3. The last explicitly selected engine saved in `%LocalAppData%\ProxiFyreUI\ui-settings.json`.
 4. A file selected by the user.
 
-Quoted service image paths and a fixed trailing service argument are parsed without executing the registered command line. Relative registrations and unquoted executable paths containing whitespace are rejected because the GUI and Windows service manager could resolve them to different executables. A selected file must be named `ProxiFyre.exe`. The engine, configuration, and log paths are displayed on the Diagnostics tab.
+Quoted service image paths and a fixed trailing service argument are parsed without executing the registered command line. Relative registrations and unquoted executable paths containing whitespace are rejected because the GUI and Windows service manager could resolve them to different executables. A selected file must be named `CodexProxy.Service.exe`. The engine, configuration, and log paths are displayed on the Diagnostics tab.
 
 The live configuration is always `app-config.json` beside the resolved engine. GUI-only preferences are never written into that file. If the live file is missing, the GUI can initialize it from `app-config.sample.json` beside the engine or GUI; otherwise it starts with a blank model that must gain a valid proxy rule before the service can start.
 
@@ -68,7 +68,7 @@ The workspace fingerprints the file when it is loaded. If another process change
 
 ## Logs and notification area
 
-Engine logs are stored in the `logs` directory beside `ProxiFyre.exe`. `Info` records service lifecycle and configuration summaries; `Debug` additionally records per-connection routing, proxy negotiation, and relay details. The Logs tab reads a bounded tail with read/write sharing, follows appended content incrementally, switches to a newer daily file after rotation, and recovers from creation, truncation, or temporary locks. **Open log file** launches the file currently being followed, or the newest `.log`/`.txt` file when following is paused. The Logs-tab **View filter** changes only which already-written lines the GUI displays; it does not change the engine's logging verbosity or configuration and does not require a restart. Follow/pause, text filtering, copy, reload, clear-view, and open-folder actions affect only the viewer; clearing the view does not delete log files.
+Engine logs are stored in the `logs` directory beside `CodexProxy.Service.exe`. `Info` records service lifecycle and configuration summaries; `Debug` additionally records per-connection routing, proxy negotiation, and relay details. The Logs tab reads a bounded tail with read/write sharing, follows appended content incrementally, switches to a newer daily file after rotation, and recovers from creation, truncation, or temporary locks. **Open log file** launches the file currently being followed, or the newest `.log`/`.txt` file when following is paused. The Logs-tab **View filter** changes only which already-written lines the GUI displays; it does not change the engine's logging verbosity or configuration and does not require a restart. Follow/pause, text filtering, copy, reload, clear-view, and open-folder actions affect only the viewer; clearing the view does not delete log files.
 
 Closing the window hides it in the notification area. The tray menu reflects the real service state and provides open, start, stop, restart, logs, and exit actions. Within each Windows identity and terminal session, ProxiFyre permits one GUI instance; launching it again restores and activates the existing window, including a tray-hidden window. Exiting the GUI does not stop the engine service. Unsaved edits are checked before reload, engine changes, or application exit.
 
@@ -93,7 +93,7 @@ vstest.console.exe bin\tests\x64\Release\ProxiFyre.Tests.dll /TestAdapterPath:pa
 pwsh -File scripts\Build-Installer.ps1 -Platform x64 -Version 2.6.2 -NoRestore
 ```
 
-The legacy `packages.config` projects, the two native setup helpers, and the two WiX projects are restored separately so their package-management models and locked installer dependency graph do not interfere with one another. `Directory.Build.props` is the repository version source; the explicit `2.6.2` arguments above make release validation unambiguous and must match it. Replace `x64` with `x86` for tests on a matching host. The ARM64 payload can be cross-built when the Visual Studio toolchain is installed, but its tests must run on Windows ARM64 rather than an x64 CI host. Architecture-specific runtime files, including `ProxiFyre.exe`, the native `ProxiFyreUI.exe` host, `ProxiFyreUI.Managed.dll`, `socksify.dll`, `ProxiFyre.Configuration.dll`, managed dependencies, and the sample configuration, are placed in:
+The legacy `packages.config` projects, the two native setup helpers, and the two WiX projects are restored separately so their package-management models and locked installer dependency graph do not interfere with one another. `Directory.Build.props` is the repository version source; the explicit `2.6.2` arguments above make release validation unambiguous and must match it. Replace `x64` with `x86` for tests on a matching host. The ARM64 payload can be cross-built when the Visual Studio toolchain is installed, but its tests must run on Windows ARM64 rather than an x64 CI host. Architecture-specific runtime files, including `CodexProxy.Service.exe`, the native `CodexProxy.exe` host, `CodexProxy.Managed.dll`, `socksify.dll`, `ProxiFyre.Configuration.dll`, managed dependencies, and the sample configuration, are placed in:
 
 ```text
 bin\exe\<architecture>\Release\
@@ -132,7 +132,7 @@ On a Windows test machine with the appropriate driver and administrator access:
 
 1. Build and test Release x64, then build x86 and ARM64 when the toolchain is installed.
 2. Install the Release payload with setup, or stage the complete Release ZIP in the protected
-   fixed-volume location described above. Launch `ProxiFyreUI.exe`, resolve a separately located
+   fixed-volume location described above. Launch `CodexProxy.exe`, resolve a separately located
    protected engine, and load the sample configuration.
 3. Add, edit, duplicate, delete, and reorder rules. Confirm a catch-all saves as `"appNames": [""]`.
 4. Confirm TLS fields and deliberately added unknown JSON fields survive load/save.
@@ -141,6 +141,6 @@ On a Windows test machine with the appropriate driver and administrator access:
 7. Confirm invalid configuration blocks apply and an engine startup failure is never displayed as Running.
 8. Follow logs through service restart, append, truncation, and daily rotation, then open the active file from the Logs toolbar. Confirm that changing the Logs-tab **View filter** only changes displayed lines, while changing **Engine log level** takes effect after a service restart.
 9. Copy diagnostics and verify that no password or full credential-bearing configuration appears.
-10. Hide the GUI to the notification area, launch `ProxiFyreUI.exe` again, and confirm the existing window is restored without creating a second tray icon.
+10. Hide the GUI to the notification area, launch `CodexProxy.exe` again, and confirm the existing window is restored without creating a second tray icon.
 11. Exit the GUI and confirm the service continues running.
 12. On Windows 7 SP1 x64, launch the installed UI and confirm the main window is constructed without a managed startup failure before repeating the basic service-state checks.

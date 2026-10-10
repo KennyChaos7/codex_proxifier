@@ -24,7 +24,7 @@ namespace ProxiFyre.Configuration
     public static class ServiceInstallLocationPolicy
 #endif
     {
-        private const string EngineExecutableName = "ProxiFyre.exe";
+        private const string EngineExecutableName = "CodexProxy.Service.exe";
         private const string ConfigurationFileName = "app-config.json";
         private const string SampleConfigurationFileName = "app-config.sample.json";
         private const int GenericAll = 0x10000000;
@@ -37,9 +37,9 @@ namespace ProxiFyre.Configuration
         private static readonly HashSet<string> AllowedPortableExecutables =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
-                "ProxiFyre.exe",
-                "ProxiFyreUI.exe",
-                "ProxiFyreUI.Managed.dll",
+                "CodexProxy.Service.exe",
+                "CodexProxy.exe",
+                "CodexProxy.Managed.dll",
                 "ProxiFyre.Configuration.dll",
                 "socksify.dll",
                 "Newtonsoft.Json.dll",
@@ -254,9 +254,9 @@ namespace ProxiFyre.Configuration
 
         private static bool HasLoaderRedirection(string directory)
         {
-            return File.Exists(Path.Combine(directory, "ProxiFyre.exe.local")) ||
-                   Directory.Exists(Path.Combine(directory, "ProxiFyre.exe.local")) ||
-                   File.Exists(Path.Combine(directory, "ProxiFyre.exe.manifest"));
+            return File.Exists(Path.Combine(directory, "CodexProxy.Service.exe.local")) ||
+                   Directory.Exists(Path.Combine(directory, "CodexProxy.Service.exe.local")) ||
+                   File.Exists(Path.Combine(directory, "CodexProxy.Service.exe.manifest"));
         }
 
         private static bool TryFindUnexpectedPortableExecutable(string directory,

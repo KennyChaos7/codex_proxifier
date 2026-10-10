@@ -158,7 +158,7 @@ if ($routerSource.Contains('if (app.empty())', [StringComparison]::Ordinal)) {
     throw 'The router must not keep catch-all application matching outside match_owner_to_app.'
 }
 
-$enginePath = Join-Path $repositoryRoot "bin\exe\$Platform\Release\ProxiFyre.exe"
+$enginePath = Join-Path $repositoryRoot "bin\exe\$Platform\Release\CodexProxy.Service.exe"
 if (-not (Test-Path -LiteralPath $enginePath -PathType Leaf)) {
     throw "The built $Platform Release engine was not found at '$enginePath'."
 }

@@ -40,7 +40,7 @@ ProxiFyre-2.6.2-win-x86-setup.exe
 ProxiFyre-2.6.2-win-x86-setup.exe.sha256
 ```
 
-The x64 and ARM64 directories use `x64` and `arm64` in the corresponding filenames. Use the package matching the machine's native Windows architecture. The bootstrapper checks that architecture before acquisition because Windows Packet Filter is a kernel driver; for example, the x86 setup deliberately does not use Windows' x86 emulation on an x64 machine. All five first-party architecture-bound runtime PE files (`ProxiFyre.exe`, the native UI host, both managed assemblies, and `socksify.dll`) plus the two native setup-helper DLLs are checked against the requested architecture before packaging.
+The x64 and ARM64 directories use `x64` and `arm64` in the corresponding filenames. Use the package matching the machine's native Windows architecture. The bootstrapper checks that architecture before acquisition because Windows Packet Filter is a kernel driver; for example, the x86 setup deliberately does not use Windows' x86 emulation on an x64 machine. All five first-party architecture-bound runtime PE files (`CodexProxy.Service.exe`, the native UI host, both managed assemblies, and `socksify.dll`) plus the two native setup-helper DLLs are checked against the requested architecture before packaging.
 
 WiX materializes the verified, uncompressed Visual C++ and Windows Packet Filter source payloads while linking the bundle. The packaging script confines those layout byproducts to its guarded temporary staging directory and deletes them after validation. The script creates only the four current-version `ProxiFyre-*` files above; it does not clean unrelated or older files already in the selected output directory, and `-Force` replaces only those exact four paths. It refuses to build when either external prerequisite filename is already present in that directory so a stale layout cannot silently become an offline package. Setup must acquire missing prerequisites from their pinned official URLs or find them in Burn's package cache.
 
@@ -94,11 +94,11 @@ The Windows 7 TLS hook addresses only the legacy protocol default, while the eng
 The MSI installs the following closed file set into the architecture-appropriate per-machine Program Files `ProxiFyre` directory:
 
 ```text
-ProxiFyre.exe
-ProxiFyre.exe.config
-ProxiFyreUI.exe
-ProxiFyreUI.exe.config
-ProxiFyreUI.Managed.dll
+CodexProxy.Service.exe
+CodexProxy.Service.exe.config
+CodexProxy.exe
+CodexProxy.exe.config
+CodexProxy.Managed.dll
 ProxiFyre.Configuration.dll
 socksify.dll
 Newtonsoft.Json.dll
@@ -112,7 +112,7 @@ The live `app-config.json`, `app-config.json.bak`, and `logs` directory are inte
 
 The installer applies a protected application-directory ACL: `SYSTEM` and built-in Administrators receive full control, while standard users receive read and execute access. This supports the GUI and service payload-integrity checks without attempting to retrofit security onto a user-controlled extracted directory.
 
-Add/Remove Programs identifies the product as **ProxiFyre**, manufacturer **NT KERNEL**, and includes project, support, update, and application-icon metadata. The required all-users Start Menu shortcut and the selectable shared-desktop shortcut both launch `ProxiFyreUI.exe`; the service executable is not presented as the normal user entry point.
+Add/Remove Programs identifies the product as **ProxiFyre**, manufacturer **NT KERNEL**, and includes project, support, update, and application-icon metadata. The required all-users Start Menu shortcut and the selectable shared-desktop shortcut both launch `CodexProxy.exe`; the service executable is not presented as the normal user entry point.
 
 ### Service
 
@@ -120,7 +120,7 @@ The MSI declaratively installs:
 
 - service name `ProxiFyreService`;
 - display name `ProxiFyre Service`;
-- executable `ProxiFyre.exe` from the installed directory;
+- executable `CodexProxy.Service.exe` from the installed directory;
 - account `LocalSystem`;
 - start type **demand/manual**;
 - error control `normal`;
@@ -134,10 +134,10 @@ The engine creates dynamically allocated IPv4 and IPv6 TCP and UDP listeners bou
 
 | Rule | Program | Direction | Protocol | Ports | Profiles | Remote scope | Edge traversal |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `ProxiFyre (TCP-In)` | installed `ProxiFyre.exe` | Inbound | TCP | Any/dynamic | Domain, Private, Public | Any | Deny |
-| `ProxiFyre (UDP-In)` | installed `ProxiFyre.exe` | Inbound | UDP | Any/dynamic | Domain, Private, Public | Any | Deny |
+| `ProxiFyre (TCP-In)` | installed `CodexProxy.Service.exe` | Inbound | TCP | Any/dynamic | Domain, Private, Public | Any | Deny |
+| `ProxiFyre (UDP-In)` | installed `CodexProxy.Service.exe` | Inbound | UDP | Any/dynamic | Domain, Private, Public | Any | Deny |
 
-No rule targets `ProxiFyreUI.exe`, no outbound rule is added, and no standalone port is opened. These rules are components of the MSI: repair is idempotent, a major upgrade updates them with the engine component, and uninstall removes only these ProxiFyre-owned rules. The installer does not invoke `netsh`, PowerShell, or a firewall custom action.
+No rule targets `CodexProxy.exe`, no outbound rule is added, and no standalone port is opened. These rules are components of the MSI: repair is idempotent, a major upgrade updates them with the engine component, and uninstall removes only these ProxiFyre-owned rules. The installer does not invoke `netsh`, PowerShell, or a firewall custom action.
 
 ## Microsoft Visual C++ runtime prerequisite
 
@@ -305,8 +305,8 @@ Coverage labels used below:
 | Setup architecture does not match native Windows | Setup exits with an actionable architecture message before acquiring WPF or changing the machine. | Manual on each mismatched host; the compiled WixStdBA condition is automated/static. |
 | ProxiFyre service installation | `ProxiFyreService` exists as LocalSystem, demand-start, dependent on `NDISRD`, and remains stopped initially. | Service table is automated/static; actual SCM state is manual. |
 | ProxiFyre service startup | After a valid configuration is saved, the GUI starts the service and SCM starts the `NDISRD` dependency as required. | Runtime probe/state logic has automated tests; actual driver/service startup is manual. |
-| GUI startup | Start Menu and optional desktop shortcuts launch one elevated `ProxiFyreUI.exe` instance. | Shortcut targets are automated/static; elevation, CLR startup, icon, and single-instance behavior are manual. |
-| Firewall rule creation | Exactly one TCP-In and one UDP-In program rule target installed `ProxiFyre.exe` with all profiles and no fixed port. | Firewall table/count/target are automated/static; Windows Firewall state is manual. |
+| GUI startup | Start Menu and optional desktop shortcuts launch one elevated `CodexProxy.exe` instance. | Shortcut targets are automated/static; elevation, CLR startup, icon, and single-instance behavior are manual. |
+| Firewall rule creation | Exactly one TCP-In and one UDP-In program rule target installed `CodexProxy.Service.exe` with all profiles and no fixed port. | Firewall table/count/target are automated/static; Windows Firewall state is manual. |
 | Repeated setup or MSI repair | Product repair succeeds and firewall-rule counts remain one TCP plus one UDP. | Declarative component ownership is static; repair/idempotence is manual. |
 | Upgrade from an earlier matching-architecture MSI | New product files replace old files; service and firewall components reconcile; downgrade is refused. | Major-upgrade authoring is static; two-version upgrade is manual. |
 | Transition from a ZIP/manual release | Existing manual service is removed first; configuration is backed up and restored after MSI install. No automatic migration is claimed. | Manual only. |

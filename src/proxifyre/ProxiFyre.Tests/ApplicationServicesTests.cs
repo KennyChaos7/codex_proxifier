@@ -24,7 +24,7 @@ namespace ProxiFyre.Tests
             _directory = Path.Combine(Path.GetTempPath(),
                 "ProxiFyre.ApplicationServicesTests." + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(_directory);
-            _enginePath = Path.Combine(_directory, "ProxiFyre.exe");
+            _enginePath = Path.Combine(_directory, "CodexProxy.Service.exe");
             File.WriteAllBytes(_enginePath, new byte[] { 0 });
             _configurationPath = ProxiFyrePaths.GetConfigurationPath(_enginePath);
         }
