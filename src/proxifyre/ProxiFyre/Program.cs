@@ -228,7 +228,15 @@ namespace ProxiFyre
                     "ProxiFyre configuration validation failed. Review the preceding configuration errors.");
             }
 
-            return new ConfigurationNormalizer().Normalize(configuration);
+            var normalized = new ConfigurationNormalizer().Normalize(configuration);
+            var scope = CodexRoutingPolicy.ValidateConfiguration(normalized);
+            if (scope.HasErrors)
+            {
+                foreach (var error in scope.Errors)
+                    LoggerInstance.Error(FormatValidationIssue(error));
+                throw new InvalidOperationException("Codex Proxy configuration contains targets outside the supported Codex scope.");
+            }
+            return normalized;
         }
 
         private static string FormatValidationIssue(ValidationIssue issue)
@@ -613,3 +621,4 @@ namespace ProxiFyre
         }
     }
 }
+
